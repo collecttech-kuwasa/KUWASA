@@ -230,6 +230,8 @@ var currentLocation;
 // Function to get the current location
 function getCurrentLocation() {
     console.log("Getting current location..."); // Add this line for debugging
+	console.log("Current Location:", currentLocation);
+
 
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(function (position) {
