@@ -223,19 +223,23 @@ document.querySelector("#toggle-names-btn").addEventListener("change", function 
                     return deg * (Math.PI / 180)
                 }
 
-var currentLocationMarker;  // Declare it globally
+
+// Declare currentLocation globally
+var currentLocation;
 
 // Function to get the current location
 function getCurrentLocation() {
-console.log("Getting current location..."); // Add this line for debugging
-console.log("Current Location:", currentLocation);
+    console.log("Getting current location..."); // Add this line for debugging
 
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(function (position) {
-            var currentLocation = {
+            currentLocation = {  // Assign the value to the globally declared variable
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
+
+            // Log the current location to the console for debugging
+            console.log("Current Location:", currentLocation);
 
             // Remove the previous current location marker, if it exists
             if (currentLocationMarker) {
@@ -266,6 +270,10 @@ console.log("Current Location:", currentLocation);
     } else {
         alert("Geolocation is not supported by this browser.");
     }
+}
+
+
+
 
                     if (navigator.geolocation) {
                         navigator.geolocation.watchPosition(function (position) {
