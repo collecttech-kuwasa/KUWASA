@@ -183,7 +183,8 @@ function showCustomersAround(currentLocation, showNames) {
         if (showNames) {
             marker.bindTooltip(customer.customername, {
                 permanent: true,
-                direction: 'auto'
+                direction: 'auto',
+				className: 'leaflet-tooltip-custom' // Add this line
             });
         }
 
