@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Replace these values with your PostgreSQL connection details
 DB_HOST = "localhost"
 DB_NAME = "kuwasaDB"
-DB_USER = "postgres"
+DB_USER = "nact"
 DB_PASSWORD = "nact"
 
 @app.route('/')
