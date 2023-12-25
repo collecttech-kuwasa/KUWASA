@@ -1,0 +1,66 @@
+<!-- templates/customer_details.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+
+<body>
+
+    <h2>Customer Details</h2>
+    <ul>
+        <li><strong>Customer Name:</strong> {{ customer[0] }}</li>
+        <li><strong>Account Number:</strong> {{ customer[1] }}</li>
+        <li><strong>Control Number:</strong> {{ customer[2] }}</li>
+        <li><strong>Meter Number:</strong> {{ customer[3] }}</li>
+        <li><strong>Mobile Number:</strong> {{ customer[4] }}</li>
+        <li><strong>House Number:</strong> {{ customer[5] }}</li>
+        <li><strong>Zone Name:</strong> {{ customer[6] }}</li>
+        <li><strong>Route Name:</strong> {{ customer[7] }}</li>
+        <li><strong>Resident Type:</strong> {{ customer[8] }}</li>
+        <li><strong>Latitude:</strong> {{ customer[9] }}</li>
+        <li><strong>Longitude:</strong> {{ customer[10] }}</li>
+    </ul>
+
+    <!-- Debug information for JavaScript -->
+    <div id="debug-info"></div>
+
+    <!-- Leaflet Map -->
+    <div id="map" style="height: 400px;"></div>
+
+    <!-- Include Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        var latitude = {{ customer[9] }};
+        var longitude = {{ customer[10] }};
+
+        // Debug information for JavaScript
+        document.getElementById('debug-info').innerHTML = `
+            <p>Latitude: ${latitude}</p>
+            <p>Longitude: ${longitude}</p>
+        `;
+
+        // Initialize the map
+        var map = L.map('map').setView([latitude, longitude], 13);
+
+        // Add a tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add a marker for the customer's location
+        L.marker([latitude, longitude]).addTo(map)
+            .bindPopup('Customer: {{ customer[0] }}')
+            .openPopup();
+    </script>
+
+</body>
+</html>

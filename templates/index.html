@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List Map</title>
+    <!-- Add Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+        }
+
+        .custom-marker {
+            background-color: red;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+        }
+
+        .leaflet-tooltip {
+            font-size: 10px;
+        }
+
+        .toggle-btn {
+            margin-bottom: 10px;
+        }
+
+        #search-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        #customer-search-input {
+            padding: 5px;
+            width: 200px;
+            margin-right: 5px;
+        }
+
+        #search-btn {
+            padding: 5px;
+        }
+
+        #info-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        #current-location-info,
+        #selected-customer-info {
+            width: 300px;
+            margin-bottom: 5px;
+        }
+		
+		.leaflet-tooltip-custom {
+    font-size: 10px; /* Adjust the font size as needed */
+    background-color: white; /* Specify the background color */
+    border: 1px solid #ccc; /* Specify the border color */
+}
+
+		
+    </style>
+</head>
+
+<body>
+    <h1>KUWASA Customers Map</h1>
+
+    <!-- Search Container -->
+    <div id="search-container">
+        <input type="text" id="customer-search-input" placeholder="Search for a customer">
+        <button id="search-btn">Search</button>
+    </div>
+
+    <!-- Info Container -->
+    <div id="info-container">
+      <label for="current-location-info">Current Location: </label>
+        <input type="text" id="current-location-info" readonly>
+        <br>
+        <label for="selected-customer-info">Selected Customer:</label>
+        <input type="text" id="selected-customer-info" readonly>
+    </div>
+
+    <!-- Leaflet Map -->
+    <div id="map"></div>
+
+   
+    <!-- Include Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Include Leaflet Routing Machine -->
+<script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+
+    <!-- Access customer data directly from Flask -->
+    <script>
+        var customers = {{ customers_json | safe }};
+    </script>
+
+    <script>
+	var selectedCustomerInfo = document.getElementById('selected-customer-info');
+var showNames = false;  // Add this line
+
+        document.addEventListener('DOMContentLoaded', function () {
+    var map;
+    var markers = [];
+    var showSatellite = false;
+    var currentLocationInfo = document.getElementById('current-location-info');
+    var selectedCustomerInfo = document.getElementById('selected-customer-info');  // Move this line up
+	var directionsLayer;
+
+ // Check if the user's preferred zoom level is stored in localStorage
+    var userZoomLevel = localStorage.getItem('userZoomLevel');
+
+
+            // Check if customers are available
+            if (customers.length > 0) {
+                // Calculate the average coordinates of all customers
+                var averageLat = customers.reduce((sum, customer) => sum + customer.latitude, 0) / customers.length;
+                var averageLng = customers.reduce((sum, customer) => sum + customer.longitude, 0) / customers.length;
+
+                map = L.map('map').setView([averageLat, averageLng], 12);
+
+                // Add a default tile layer (OpenStreetMap)
+                var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Add a satellite imagery tile layer
+                var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                    attribution: '© Google contributors',
+                    maxZoom: 40,
+                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                });
+				
+				
+// Function to show customers around the current location
+function showCustomersAround(currentLocation, showNames) {
+    // Clear existing markers
+    markers.forEach(function (marker) {
+        map.removeLayer(marker);
+    });
+
+    markers = []; // Clear the markers array
+
+    // Set the current tile layer based on user selection
+    var currentLayer = showSatellite ? satelliteLayer : defaultLayer;
+    map.addLayer(currentLayer);
+
+    // Filter customers within a certain radius (e.g., 15000 meters)
+    var radius = 15000; // in meters
+    var nearbyCustomers = customers.filter(function (customer) {
+        var distance = calculateDistance(
+            currentLocation.lat, currentLocation.lng,
+            customer.latitude, customer.longitude
+        );
+        return distance <= radius;
+    });
+
+    console.log("Nearby Customers:", nearbyCustomers); // Debug statement
+
+    // Add markers for nearby customers
+    for (var i = 0; i < nearbyCustomers.length; i++) {
+        var customer = nearbyCustomers[i];
+        var marker = L.marker([customer.latitude, customer.longitude])
+            .bindPopup(getCustomerPopupContent(customer)) // Bind popup content
+            .on('click', function (e) {
+                // Handle marker click event here
+                var clickedMarker = e.target;
+                var clickedCoords = clickedMarker.getLatLng();
+                selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
+            });
+
+        // Use tooltip instead of popup if showNames is true
+        if (showNames) {
+            marker.bindTooltip(customer.customername, {
+                permanent: true,
+                direction: 'auto'
+            });
+        }
+
+        markers.push(marker);
+        marker.addTo(map);
+    }
+
+    // Show current location in the textbox
+    currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
+}
+
+// Update the event listener to toggle customer names display
+document.querySelector("#toggle-names-btn").addEventListener("change", function () {
+    showNames = document.querySelector("#toggle-names-btn").checked;
+    showCustomersAround(map.getCenter(), showNames);
+});
+
+
+
+                // Function to calculate distance between two points using Haversine formula
+                function calculateDistance(lat1, lon1, lat2, lon2) {
+                    var R = 6371000; // Radius of the earth in meters
+                    var dLat = deg2rad(lat2 - lat1);
+                    var dLon = deg2rad(lon2 - lon1);
+                    var a =
+                        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    var distance = R * c; // Distance in meters
+                    return distance;
+                }
+
+                // Function to convert degrees to radians
+                function deg2rad(deg) {
+                    return deg * (Math.PI / 180)
+                }
+
+var currentLocationMarker;  // Declare it globally
+
+// Function to get the current location
+function getCurrentLocation() {
+console.log("Getting current location..."); // Add this line for debugging
+
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(function (position) {
+            var currentLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            // Remove the previous current location marker, if it exists
+            if (currentLocationMarker) {
+                map.removeLayer(currentLocationMarker);
+            }
+
+            // Add a marker for the current location with a different color
+            currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: '<div class="leaflet-div-icon"></div>',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                }),
+            }).addTo(map);
+
+            // Fly to the new current location with a smooth animation
+            var zoomLevel = userZoomLevel ? parseInt(userZoomLevel) : 16;
+            map.flyTo([currentLocation.lat, currentLocation.lng], zoomLevel);
+
+            // Store the current zoom level in localStorage
+            localStorage.setItem('userZoomLevel', zoomLevel);
+
+            // Show customers around the new current location without names by default
+            showCustomersAround(currentLocation, false);
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+
+                    if (navigator.geolocation) {
+                        navigator.geolocation.watchPosition(function (position) {
+                            var currentLocation = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+
+                            // Remove existing markers
+                            markers.forEach(function (marker) {
+                                map.removeLayer(marker);
+                            });
+
+                           // Add a marker for the current location with a different color
+var currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+    icon: L.divIcon({
+        className: 'custom-marker',
+        html: '<div class="leaflet-div-icon"></div>',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    }),
+}).addTo(map);  // Remove the bindTooltip part
+
+
+                            // Fly to the new current location with a smooth animation
+            
+var zoomLevel = userZoomLevel ? parseInt(userZoomLevel) : 16;
+map.flyTo([currentLocation.lat, currentLocation.lng], zoomLevel);
+
+// Store the current zoom level in localStorage
+localStorage.setItem('userZoomLevel', zoomLevel);
+
+
+
+                            // Show customers around the current location without names by default
+                            showCustomersAround(currentLocation, false);
+                        });
+                    } else {
+                        alert("Geolocation is not supported by this browser.");
+                    }
+                }
+
+                // Function to get popup content for a customer
+                function getCustomerPopupContent(customer) {
+                    return `
+                        <div>
+                        <h3>${customer.customername}</h3>
+                        <p>Account Number: ${customer.accountnumber}</p>
+                        <p>Control Number: ${customer.controlnumber}</p>
+                        <p>Meter Number: ${customer.meternumber}</p>
+                        <p>Mobile Number: ${customer.mobilenumber}</p>
+                        <p>House Number: ${customer.house_number}</p>
+                        <p>Zone Name: ${customer.zonename}</p>
+                        <p>Route Name: ${customer.routename}</p>
+                        <p>Resident Type: ${customer.resident_type}</p>
+                    </div>
+                    `;
+                }
+
+// Function to search for a customer by name, account number, control number, or phone number
+function searchForCustomer() {
+    var searchInput = document.querySelector("#customer-search-input");
+    var searchTerm = searchInput.value.toLowerCase();
+
+    // Filter customers based on the search term
+    var searchResults = customers.filter(function (customer) {
+        return (
+            customer.customername.toLowerCase().includes(searchTerm) ||
+            customer.accountnumber.toLowerCase().includes(searchTerm) ||
+            customer.controlnumber.toLowerCase().includes(searchTerm) ||
+            customer.mobilenumber.toLowerCase().includes(searchTerm)
+        );
+    });
+
+    // Clear existing markers
+    markers.forEach(function (marker) {
+        map.removeLayer(marker);
+    });
+
+    // Add markers for search results
+    markers = searchResults.map(function (customer) {
+        var marker = L.marker([customer.latitude, customer.longitude])
+            .bindPopup(getCustomerPopupContent(customer)) // Bind popup content
+            .on('click', function (e) {
+                // Handle marker click event here
+                var clickedMarker = e.target;
+                var clickedCoords = clickedMarker.getLatLng();
+                selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
+            });
+
+        // Use tooltip instead of popup if showNames is true
+        if (showNames) {
+            marker.bindTooltip(customer.customername, {
+                permanent: true,
+                direction: 'auto'
+            });
+        }
+
+        // Add marker to the map
+        marker.addTo(map);
+
+        return marker;
+    });
+
+    // Show selected customer in the textbox
+    if (searchResults.length > 0) {
+        // Update the selectedCustomerInfo with the coordinates of the selected customer
+        selectedCustomerInfo.value = `Latitude: ${searchResults[0].latitude.toFixed(6)}, Longitude: ${searchResults[0].longitude.toFixed(6)}`;
+
+        // Zoom to the selected customer
+        map.flyTo([searchResults[0].latitude, searchResults[0].longitude], 16); // Adjust the zoom level as needed
+    } else {
+        selectedCustomerInfo.value = "No customer found";  // Update the message if no customer is found
+    }
+}
+
+// Function to show directions and distance
+function showDirections() {
+    if (currentLocationInfo.value && selectedCustomerInfo.value) {
+        // Clear existing directions layer
+        if (directionsLayer) {
+            map.removeControl(directionsLayer);
+        }
+
+        // Get current location and customer coordinates
+        var currentCoords = currentLocationInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
+        var customerCoords = selectedCustomerInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
+
+        // Create a new routing control
+        var waypoints = [
+            L.latLng(currentCoords[0], currentCoords[1]),
+            L.latLng(customerCoords[0], customerCoords[1])
+        ];
+
+        try {
+            var control = L.Routing.control({
+                waypoints: waypoints,
+                routeWhileDragging: true
+            }).addTo(map);
+
+            // Update the directionsLayer variable
+            directionsLayer = control;
+
+            // Check if the control has a valid route
+            if (control.getPlan() && control.getPlan().routes && control.getPlan().routes.length > 0) {
+                // Extract the route from the control
+                var route = control.getPlan().routes[0];
+
+                // Fit the map to the bounds of the route
+                map.fitBounds(route.bounds);
+            } else {
+                console.error("Error: No valid route found.");
+            }
+        } catch (error) {
+            console.error("Error creating routing control:", error);
+        }
+    } else {
+        alert('Please select a customer and get your current location before showing directions.');
+    }
+}
+
+
+
+
+                // Add a button to show directions
+                var showDirectionsBtn = document.createElement('button');
+                showDirectionsBtn.textContent = 'Show Directions';
+                showDirectionsBtn.addEventListener('click', showDirections);
+                document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
+
+                // Add a button to trigger getting the current location
+                document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
+
+                // Add a button to toggle customer names display
+                document.querySelector("#toggle-names-btn").addEventListener("click", function () {
+                    var showNames = document.querySelector("#toggle-names-btn").checked;
+                    showCustomersAround(map.getCenter(), showNames);
+                });
+
+                // Add a button to toggle between OpenStreetMap and satellite imagery
+                document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
+                    showSatellite = !showSatellite;
+                    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
+                });
+
+                // Add an event listener for the search button
+                document.querySelector("#search-btn").addEventListener("click", searchForCustomer);
+            } else {
+                console.error("No customer data available.");
+            }
+			
+			// Made with ❤️ by CollectTech Innovations
+        var madeWithLove = document.createElement('p');
+        madeWithLove.innerHTML = 'Made with <span style="color: red;">❤️</span> by CollectTech Innovations';
+        madeWithLove.style.position = 'fixed';
+        madeWithLove.style.bottom = '10px';
+        madeWithLove.style.right = '10px';
+        document.body.appendChild(madeWithLove);
+        });
+    </script>
+
+    <!-- Add buttons to trigger getting the current location, toggle customer names, and toggle map layer -->
+    <div class="toggle-btn">
+        <button id="get-location-btn">Get My Location</button>
+        <label for="toggle-names-btn">Show Names</label>
+        <input type="checkbox" id="toggle-names-btn">
+        <button id="toggle-layer-btn">Toggle Layer</button>
+    </div>
+
+</body>
+
+</html>
