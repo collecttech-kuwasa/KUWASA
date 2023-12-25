@@ -92,10 +92,6 @@
 
     <!-- Leaflet Map -->
     <div id="map"></div>
-
-<!-- Add an id to the madeWithLove element -->
-<p id="made-with-love">Made with <span style="color: red;">❤️</span> by CollectTech Innovations</p>
-
    
     <!-- Include Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -461,12 +457,14 @@ function showDirections() {
             }
 			
 			// Made with ❤️ by CollectTech Innovations
-        var madeWithLove = document.createElement('p');
-        madeWithLove.innerHTML = 'Made with <span style="color: red;">❤️</span> by CollectTech Innovations';
-        madeWithLove.style.position = 'fixed';
-        madeWithLove.style.bottom = '10px';
-        madeWithLove.style.right = '10px';
-        document.body.appendChild(madeWithLove);
+var madeWithLove = document.createElement('p');
+madeWithLove.innerHTML = 'Made with <span style="color: red; font-size: 10px;">❤️</span> by CollectTech Innovations';
+madeWithLove.style.position = 'fixed';
+madeWithLove.style.bottom = '0';
+madeWithLove.style.right = '0';
+madeWithLove.style.margin = '10px'; // Add margin for better visibility
+document.body.appendChild(madeWithLove);
+
         });
     </script>
 
