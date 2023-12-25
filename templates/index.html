@@ -227,9 +227,8 @@ document.querySelector("#toggle-names-btn").addEventListener("change", function 
 // Declare currentLocation globally
 var currentLocation;
 
-// Function to get the current location
-console.log("Getting current location...");
-
+function getCurrentLocation() {
+    console.log("Getting current location...");
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(function (position) {
             var currentLocation = {
