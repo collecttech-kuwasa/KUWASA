@@ -47,6 +47,14 @@
             text-align: center;
             margin-bottom: 10px;
         }
+		
+		/* Move the madeWithLove style to the bottom-right corner and minimize it */
+    #made-with-love {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 10px; /* Adjust the font size for minimization */
+        color: red;
 
         #current-location-info,
         #selected-customer-info {
@@ -65,7 +73,7 @@
 </head>
 
 <body>
-    <h1>KUWASA Customers Map</h1>
+    <h1>KUWASA Customers</h1>
 
     <!-- Search Container -->
     <div id="search-container">
@@ -84,7 +92,6 @@
 
     <!-- Leaflet Map -->
     <div id="map"></div>
-
    
     <!-- Include Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -176,7 +183,8 @@ function showCustomersAround(currentLocation, showNames) {
         if (showNames) {
             marker.bindTooltip(customer.customername, {
                 permanent: true,
-                direction: 'auto'
+                direction: 'auto',
+				className: 'leaflet-tooltip-custom' // Add this line
             });
         }
 
@@ -215,18 +223,20 @@ document.querySelector("#toggle-names-btn").addEventListener("change", function 
                     return deg * (Math.PI / 180)
                 }
 
-var currentLocationMarker;  // Declare it globally
 
-// Function to get the current location
+// Declare currentLocation globally
+var currentLocation;
+
 function getCurrentLocation() {
-console.log("Getting current location..."); // Add this line for debugging
-
+    console.log("Getting current location...");
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(function (position) {
             var currentLocation = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
+
+            console.log("Current Location:", currentLocation);
 
             // Remove the previous current location marker, if it exists
             if (currentLocationMarker) {
@@ -253,10 +263,15 @@ console.log("Getting current location..."); // Add this line for debugging
 
             // Show customers around the new current location without names by default
             showCustomersAround(currentLocation, false);
+        }, function (error) {
+            console.error("Error getting current location:", error);
         });
     } else {
         alert("Geolocation is not supported by this browser.");
     }
+
+
+
 
                     if (navigator.geolocation) {
                         navigator.geolocation.watchPosition(function (position) {
@@ -450,12 +465,15 @@ function showDirections() {
             }
 			
 			// Made with ❤️ by CollectTech Innovations
-        var madeWithLove = document.createElement('p');
-        madeWithLove.innerHTML = 'Made with <span style="color: red;">❤️</span> by CollectTech Innovations';
-        madeWithLove.style.position = 'fixed';
-        madeWithLove.style.bottom = '10px';
-        madeWithLove.style.right = '10px';
-        document.body.appendChild(madeWithLove);
+var madeWithLove = document.createElement('p');
+ madeWithLove.innerHTML = 'Made with <span style="color: red;">❤️</span> by CollectTech';
+madeWithLove.style.position = 'fixed';
+madeWithLove.style.bottom = '0';
+madeWithLove.style.right = '0';
+madeWithLove.style.margin = '4px'; // Add margin for better visibility
+document.body.appendChild(madeWithLove);
+
+
         });
     </script>
 
