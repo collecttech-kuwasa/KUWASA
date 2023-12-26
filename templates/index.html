@@ -12,13 +12,21 @@
             height: 500px;
         }
 
-        .custom-marker {
-            background-color: red;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #fff;
+        .custom-customer-marker {
+    background-color: blue;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    border: none;
         }
+		
+		.custom-current-location-marker {
+    background-color: red;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    border: none;
+}
 
         .leaflet-tooltip {
             font-size: 10px;
@@ -168,36 +176,37 @@ function showCustomersAround(currentLocation, showNames) {
 
     console.log("Nearby Customers:", nearbyCustomers); // Debug statement
 
-    // Add markers for nearby customers
-    for (var i = 0; i < nearbyCustomers.length; i++) {
+ // Add markers for nearby customers
+for (var i = 0; i < nearbyCustomers.length; i++) {
     var customer = nearbyCustomers[i];
-    var marker = L.marker([customer.latitude, customer.longitude], {
+    var customerMarker = L.marker([customer.latitude, customer.longitude], {
         icon: L.divIcon({
-            className: 'custom-marker',
+            className: 'custom-customer-marker',
             html: '<div class="leaflet-div-icon"></div>',
             iconSize: [10, 10],  // Adjusted size to make it smaller
             iconAnchor: [5, 5],  // Adjusted anchor
         }),
-    }).bindPopup(getCustomerPopupContent(customer)) // Bind popup content
-      .on('click', function (e) {
-          // Handle marker click event here
-          var clickedMarker = e.target;
-          var clickedCoords = clickedMarker.getLatLng();
-          selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
-      });
+    })
+    .bindPopup(getCustomerPopupContent(customer))
+    .on('click', function (e) {
+        var clickedMarker = e.target;
+        var clickedCoords = clickedMarker.getLatLng();
+        selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
+    });
 
     // Use tooltip instead of popup if showNames is true
     if (showNames) {
-        marker.bindTooltip(customer.customername, {
+        customerMarker.bindTooltip(customer.customername, {
             permanent: true,
             direction: 'auto',
-            className: 'leaflet-tooltip-custom' // Add this line
+            className: 'leaflet-tooltip-custom'
         });
     }
 
-    markers.push(marker);
-    marker.addTo(map);
+    markers.push(customerMarker);
+    customerMarker.addTo(map);
 }
+
 
     // Show current location in the textbox
     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
@@ -292,15 +301,15 @@ function getCurrentLocation() {
                                 map.removeLayer(marker);
                             });
 
-                           // Add a marker for the current location with a different color
+// Add a marker for the current location with a different color
 var currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
     icon: L.divIcon({
-        className: 'custom-marker',
+        className: 'custom-current-location-marker',
         html: '<div class="leaflet-div-icon"></div>',
         iconSize: [10, 10],  // Adjusted size to make it smaller
         iconAnchor: [5, 5],  // Adjusted anchor
     }),
-}).addTo(map);  // Remove the bindTooltip part
+}).addTo(map);
 
 
                             // Fly to the new current location with a smooth animation
