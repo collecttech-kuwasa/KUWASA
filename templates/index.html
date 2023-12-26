@@ -256,11 +256,10 @@ function getCurrentLocation() {
             }).addTo(map);
 
             // Fly to the new current location with a smooth animation
-            var zoomLevel = userZoomLevel ? parseInt(userZoomLevel) : 16;
-            map.flyTo([currentLocation.lat, currentLocation.lng], zoomLevel);
+            map.flyTo([currentLocation.lat, currentLocation.lng], 16); // Adjust the zoom level as needed
 
             // Store the current zoom level in localStorage
-            localStorage.setItem('userZoomLevel', zoomLevel);
+            localStorage.setItem('userZoomLevel', 16);
 
             // Show customers around the new current location without names by default
             showCustomersAround(currentLocation, false);
@@ -270,6 +269,7 @@ function getCurrentLocation() {
     } else {
         alert("Geolocation is not supported by this browser.");
     }
+
 
 
 
