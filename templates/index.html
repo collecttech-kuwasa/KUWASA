@@ -12,20 +12,21 @@
             height: 500px;
         }
 
-        .custom-customer-marker {
+       .custom-customer-marker,
+.custom-current-location-marker {
+    background-color: transparent;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    border: none;
+}
+
+.custom-customer-marker {
     background-color: blue;
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    border: none;
-        }
-		
-		.custom-current-location-marker {
+}
+
+.custom-current-location-marker {
     background-color: red;
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    border: none;
 }
 
         .leaflet-tooltip {
