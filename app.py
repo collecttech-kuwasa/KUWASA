@@ -3,6 +3,8 @@
 from flask import Flask, render_template, jsonify
 import psycopg2
 import json
+import ssl
+from werkzeug.serving import run_simple
 
 app = Flask(__name__)
 
@@ -11,6 +13,14 @@ DB_HOST = "localhost"
 DB_NAME = "kuwasaDB"
 DB_USER = "nact"
 DB_PASSWORD = "nact"
+
+
+# Path to your SSL certificate and private key files (replace with your actual files)
+SSL_CERT = 'certificate.crt'
+SSL_KEY = 'private.key'
+
+context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+context.load_cert_chain(SSL_CERT, SSL_KEY)
 
 @app.route('/')
 def index():
@@ -67,7 +77,7 @@ def customer_details(account_number):
 
     return render_template('customer_details.html', customer=customer)
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    # Run the app with SSL support using werkzeug server
+    run_simple('0.0.0.0', 8000, app, ssl_context=context, use_reloader=True, use_debugger=True)
 
