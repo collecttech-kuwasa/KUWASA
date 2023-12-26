@@ -134,17 +134,18 @@ var showNames = false;  // Add this line
 
                 map = L.map('map').setView([averageLat, averageLng], 12);
 
-                // Add a default tile layer (OpenStreetMap)
-                var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(map);
+               // Default OpenStreetMap tile layer
+var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 100  // Set the maximum zoom level to 100
+}).addTo(map);
 
-                // Add a satellite imagery tile layer
-                var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                    attribution: '© Google contributors',
-                    maxZoom: 16,
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                });
+// Google satellite imagery tile layer
+var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    attribution: '© Google contributors',
+    maxZoom: 100,  // Set the maximum zoom level to 100
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+});
 				
 				
 // Function to show customers around the current location
