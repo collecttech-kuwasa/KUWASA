@@ -155,8 +155,8 @@ function showCustomersAround(currentLocation, showNames) {
     var currentLayer = showSatellite ? satelliteLayer : defaultLayer;
     map.addLayer(currentLayer);
 
-    // Filter customers within a certain radius (e.g., 1000 meters)
-    var radius = 1000; // in meters
+    // Filter customers within a certain radius (e.g., 100 meters)
+    var radius = 100; // in meters
     var nearbyCustomers = customers.filter(function (customer) {
         var distance = calculateDistance(
             currentLocation.lat, currentLocation.lng,
