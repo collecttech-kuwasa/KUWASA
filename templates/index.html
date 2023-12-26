@@ -170,28 +170,34 @@ function showCustomersAround(currentLocation, showNames) {
 
     // Add markers for nearby customers
     for (var i = 0; i < nearbyCustomers.length; i++) {
-        var customer = nearbyCustomers[i];
-        var marker = L.marker([customer.latitude, customer.longitude])
-            .bindPopup(getCustomerPopupContent(customer)) // Bind popup content
-            .on('click', function (e) {
-                // Handle marker click event here
-                var clickedMarker = e.target;
-                var clickedCoords = clickedMarker.getLatLng();
-                selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
-            });
+    var customer = nearbyCustomers[i];
+    var marker = L.marker([customer.latitude, customer.longitude], {
+        icon: L.divIcon({
+            className: 'custom-marker',
+            html: '<div class="leaflet-div-icon"></div>',
+            iconSize: [10, 10],  // Adjusted size to make it smaller
+            iconAnchor: [5, 5],  // Adjusted anchor
+        }),
+    }).bindPopup(getCustomerPopupContent(customer)) // Bind popup content
+      .on('click', function (e) {
+          // Handle marker click event here
+          var clickedMarker = e.target;
+          var clickedCoords = clickedMarker.getLatLng();
+          selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
+      });
 
-        // Use tooltip instead of popup if showNames is true
-        if (showNames) {
-            marker.bindTooltip(customer.customername, {
-                permanent: true,
-                direction: 'auto',
-				className: 'leaflet-tooltip-custom' // Add this line
-            });
-        }
-
-        markers.push(marker);
-        marker.addTo(map);
+    // Use tooltip instead of popup if showNames is true
+    if (showNames) {
+        marker.bindTooltip(customer.customername, {
+            permanent: true,
+            direction: 'auto',
+            className: 'leaflet-tooltip-custom' // Add this line
+        });
     }
+
+    markers.push(marker);
+    marker.addTo(map);
+}
 
     // Show current location in the textbox
     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
@@ -291,9 +297,8 @@ var currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng],
     icon: L.divIcon({
         className: 'custom-marker',
         html: '<div class="leaflet-div-icon"></div>',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
+        iconSize: [10, 10],  // Adjusted size to make it smaller
+        iconAnchor: [5, 5],  // Adjusted anchor
     }),
 }).addTo(map);  // Remove the bindTooltip part
 
