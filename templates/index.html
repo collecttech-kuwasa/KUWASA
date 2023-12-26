@@ -142,7 +142,7 @@ var showNames = false;  // Add this line
                 // Add a satellite imagery tile layer
                 var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
                     attribution: '© Google contributors',
-                    maxZoom: 30,
+                    maxZoom: 20,
                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                 });
 				
@@ -267,10 +267,10 @@ var currentLocation;
                     }).addTo(map);
 
                     // Fly to the new current location with a smooth animation
-                    map.flyTo([currentLocation.lat, currentLocation.lng], 30); // Adjust the zoom level as needed
+                    map.flyTo([currentLocation.lat, currentLocation.lng], 20); // Adjust the zoom level as needed
 
                     // Store the current zoom level in localStorage
-                    localStorage.setItem('userZoomLevel', 30);
+                    localStorage.setItem('userZoomLevel', 20);
 
                     // Show customers around the new current location without names by default
                     showCustomersAround(currentLocation, false);
@@ -307,7 +307,7 @@ var currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng],
 
                             // Fly to the new current location with a smooth animation
             
-var zoomLevel = userZoomLevel ? parseInt(userZoomLevel) : 30;
+var zoomLevel = userZoomLevel ? parseInt(userZoomLevel) : 20;
 map.flyTo([currentLocation.lat, currentLocation.lng], zoomLevel);
 
 // Store the current zoom level in localStorage
@@ -391,7 +391,7 @@ function searchForCustomer() {
         selectedCustomerInfo.value = `Latitude: ${searchResults[0].latitude.toFixed(6)}, Longitude: ${searchResults[0].longitude.toFixed(6)}`;
 
         // Zoom to the selected customer
-        map.flyTo([searchResults[0].latitude, searchResults[0].longitude], 30); // Adjust the zoom level as needed
+        map.flyTo([searchResults[0].latitude, searchResults[0].longitude], 20); // Adjust the zoom level as needed
     } else {
         selectedCustomerInfo.value = "No customer found";  // Update the message if no customer is found
     }
