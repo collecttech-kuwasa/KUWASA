@@ -146,6 +146,24 @@ var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z
     maxZoom: 0,  // Set the maximum zoom level to 100
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
 });
+
+function calculateRecommendedZoomLevel(desiredFeatureSize) {
+    var initialScale = 1;
+
+    for (var zoomLevel = 0; zoomLevel <= 18; zoomLevel++) {
+        var scale = initialScale / Math.pow(2, zoomLevel);
+        var featureSizeInPixels = desiredFeatureSize / scale;
+
+        // Adjust the condition based on your specific criteria
+        if (featureSizeInPixels >= 1) {
+            // Return the recommended zoom level
+            return zoomLevel;
+        }
+    }
+
+    // If no suitable zoom level is found, return a default value (e.g., 12)
+    return 12;
+};
 				
 				
 // Function to show customers around the current location
@@ -241,46 +259,49 @@ document.querySelector("#toggle-names-btn").addEventListener("change", function 
 var currentLocation;
 
 // Function to get the current location
-        function getCurrentLocation() {
-            console.log("Getting current location...");
-            if (navigator.geolocation) {
-                navigator.geolocation.watchPosition(function (position) {
-                    var currentLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
+    function getCurrentLocation() {
+        console.log("Getting current location...");
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(function (position) {
+                var currentLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
 
-                    console.log("Current Location:", currentLocation);
+                console.log("Current Location:", currentLocation);
 
-                    // Remove the previous current location marker, if it exists
-                    if (currentLocationMarker) {
-                        map.removeLayer(currentLocationMarker);
-                    }
+                // Remove the previous current location marker, if it exists
+                if (currentLocationMarker) {
+                    map.removeLayer(currentLocationMarker);
+                }
 
-                    // Add a marker for the current location with a different color
-                    currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
-                        icon: L.divIcon({
-                            className: 'custom-marker',
-                            html: '<div class="leaflet-div-icon"></div>',
-                            iconSize: [8, 8],
-                            iconAnchor: [4, 4],
-                        }),
-                    }).addTo(map);
+                // Add a marker for the current location with a different color
+                currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: '<div class="leaflet-div-icon"></div>',
+                        iconSize: [8, 8],
+                        iconAnchor: [4, 4],
+                    }),
+                }).addTo(map);
 
-                    // Fly to the new current location with a smooth animation
-                    map.flyTo([currentLocation.lat, currentLocation.lng], 16); // Adjust the zoom level as needed
+                // Get the recommended zoom level based on the desired feature size
+                var recommendedZoomLevel = calculateRecommendedZoomLevel(5); // Adjust desired feature size as needed
 
-                    // Store the current zoom level in localStorage
-                    localStorage.setItem('userZoomLevel', 16);
+                // Fly to the new current location with a smooth animation and set the recommended zoom level
+                map.flyTo([currentLocation.lat, currentLocation.lng], recommendedZoomLevel);
 
-                    // Show customers around the new current location without names by default
-                    showCustomersAround(currentLocation, false);
-                }, function (error) {
-                    console.error("Error getting current location:", error);
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
+                // Store the current zoom level in localStorage
+                localStorage.setItem('userZoomLevel', recommendedZoomLevel);
+
+                // Show customers around the new current location without names by default
+                showCustomersAround(currentLocation, false);
+            }, function (error) {
+                console.error("Error getting current location:", error);
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
 
 
                     if (navigator.geolocation) {
