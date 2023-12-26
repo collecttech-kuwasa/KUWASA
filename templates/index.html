@@ -132,7 +132,10 @@ var showNames = false;  // Add this line
                 var averageLat = customers.reduce((sum, customer) => sum + customer.latitude, 0) / customers.length;
                 var averageLng = customers.reduce((sum, customer) => sum + customer.longitude, 0) / customers.length;
 
-                map = L.map('map').setView([averageLat, averageLng], 12);
+// Set a default zoom level
+var defaultZoomLevel = 14;
+
+                map = L.map('map').setView([averageLat, averageLng], defaultZoomLevel);
 
                // Default OpenStreetMap tile layer
 var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -149,6 +152,8 @@ var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z
 
 function calculateRecommendedZoomLevel(desiredFeatureSize) {
     var initialScale = 1;
+	 var recommendedZoomLevel = map.getZoom(); // Set the initial zoom level to the current map zoom level
+
 
     for (var zoomLevel = 0; zoomLevel <= 18; zoomLevel++) {
         var scale = initialScale / Math.pow(2, zoomLevel);
@@ -162,7 +167,7 @@ function calculateRecommendedZoomLevel(desiredFeatureSize) {
     }
 
     // If no suitable zoom level is found, return a default value (e.g., 18)
-    return 18;
+    return recommendedZoomLevel;
 };
 				
 				
