@@ -137,13 +137,13 @@ var showNames = false;  // Add this line
                // Default OpenStreetMap tile layer
 var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
-    maxZoom: 20  // Set the maximum zoom level to 100
+    maxZoom: 18  // Set the maximum zoom level to 18
 }).addTo(map);
 
 // Google satellite imagery tile layer
 var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     attribution: '© Google contributors',
-    maxZoom: 20,  // Set the maximum zoom level to 100
+    maxZoom: 18,  // Set the maximum zoom level to 18
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
 });
 
@@ -161,8 +161,8 @@ function calculateRecommendedZoomLevel(desiredFeatureSize) {
         }
     }
 
-    // If no suitable zoom level is found, return a default value (e.g., 12)
-    return 12;
+    // If no suitable zoom level is found, return a default value (e.g., 18)
+    return 18;
 };
 				
 				
