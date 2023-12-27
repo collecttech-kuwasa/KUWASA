@@ -56,13 +56,15 @@
         }
 
         /* Move the madeWithLove style to the bottom-right corner and minimize it */
-        #made-with-love {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 10px; /* Adjust the font size for minimization */
-            color: red;
-        }
+#made-with-love {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 10px; /* Adjust the font size for minimization */
+    color: red;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
 
         #current-location-info,
         #selected-customer-info {
