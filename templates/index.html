@@ -453,17 +453,19 @@ function showDirections() {
         var customerCoords = selectedCustomerInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
 
         // Create a new routing control using leaflet-routing-machine
-        routingControl = L.Routing.control({
-            waypoints: [
-                L.latLng(currentCoords[0], currentCoords[1]),
-                L.latLng(customerCoords[0], customerCoords[1])
-            ],
-            routeWhileDragging: true
-        });
+        var waypoints = [
+            L.latLng(currentCoords[0], currentCoords[1]),
+            L.latLng(customerCoords[0], customerCoords[1])
+        ];
 
         try {
+            routingControl = L.Routing.control({
+                waypoints: waypoints,
+                routeWhileDragging: true
+            });
+
             // Add the routing control to the map
-            map.addControl(routingControl);
+            routingControl.addTo(map);
 
             // Add a button to remove the route
             removeRouteBtn = document.createElement('button');
@@ -483,6 +485,7 @@ function showDirections() {
         alert('Please select a customer and get your current location before showing directions.');
     }
 }
+
 
                 // Add a button to show directions
                 var showDirectionsBtn = document.createElement('button');
