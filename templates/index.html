@@ -111,17 +111,7 @@ body {
 	<!-- Add this new section for customer list -->
 <div id="customer-list-container">
     <h2>Customer List</h2>
-    <ul id="customer-list">
-	// Populate the list with customer information including house number and distance
-nearbyCustomers.forEach(function (customer) {
-    var listItem = document.createElement('li');
-    var distance = calculateDistance(
-        currentLocation.lat, currentLocation.lng,
-        customer.latitude, customer.longitude
-    ).toFixed(2); // Round the distance to two decimal places
-    listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number}, ${distance}m)`;
-    customerListContainer.appendChild(listItem);
-});</ul>
+    <ul id="customer-list"></ul>
 </div>
 
     <!-- Include Leaflet JS -->
@@ -618,9 +608,19 @@ madeWithLove.style.right = '0';
 madeWithLove.style.margin = '4px'; // Add margin for better visibility
 document.body.appendChild(madeWithLove);
 
-
-
         });
+		
+		 // Populate the list with customer information including house number and distance
+    nearbyCustomers.forEach(function (customer) {
+        var listItem = document.createElement('li');
+        var distance = calculateDistance(
+            currentLocation.lat, currentLocation.lng,
+            customer.latitude, customer.longitude
+        ).toFixed(2); // Round the distance to two decimal places
+        listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number}, ${distance}m)`;
+        document.getElementById('customer-list').appendChild(listItem);
+    });
+	
     </script>
 
     <!-- Add buttons to trigger getting the current location, toggle customer names, and toggle map layer -->
