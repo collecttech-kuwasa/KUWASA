@@ -148,13 +148,13 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                 // Default OpenStreetMap tile layer
                 var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors',
-                    maxZoom: 50 // Set the maximum zoom level to 18
+                    maxZoom: 25 // Set the maximum zoom level to 18
                 }).addTo(map);
 
                 // Google satellite imagery tile layer
                 var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
                     attribution: '© Google contributors',
-                    maxZoom: 50, // Set the maximum zoom level to 18
+                    maxZoom: 25, // Set the maximum zoom level to 18
                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                 });
 
@@ -162,7 +162,7 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                     var initialScale = 1;
                     var recommendedZoomLevel = map.getZoom(); // Set the initial zoom level to the current map zoom level
 
-                    for (var zoomLevel = 0; zoomLevel <= 50; zoomLevel++) {
+                    for (var zoomLevel = 0; zoomLevel <= 25; zoomLevel++) {
                         var scale = initialScale / Math.pow(2, zoomLevel);
                         var featureSizeInPixels = desiredFeatureSize / scale;
 
@@ -240,12 +240,12 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
 // Define separate instances for OpenStreetMap and Google satellite imagery
 var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
-    maxZoom: 50
+    maxZoom: 25
 });
 
 var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     attribution: '© Google contributors',
-    maxZoom: 50,
+    maxZoom: 25,
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
 });
 
@@ -255,12 +255,12 @@ defaultLayer.addTo(map);
 // Define separate instances for OpenStreetMap and Google satellite imagery
 var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
-    maxZoom: 50
+    maxZoom: 25
 });
 
 var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     attribution: '© Google contributors',
-    maxZoom: 50,
+    maxZoom: 25,
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
 });
 
@@ -349,7 +349,7 @@ function getCurrentLocation() {
             var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
 
             // Set the view to the new current location with the recommended zoom level
-            map.setView([currentLocation.lat, currentLocation.lng], 50); // Set the zoom level to 18
+            map.setView([currentLocation.lat, currentLocation.lng], 25); // Set the zoom level to 18
 
             // Show customers around the new current location without names by default
             showCustomersAround(currentLocation, false);
