@@ -228,7 +228,7 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
     showSatellite = !showSatellite;
 
-    // Clear existing layers and add the new layer after removal is complete
+    // Clear existing layers
     map.eachLayer(function (layer) {
         map.removeLayer(layer);
     }, this);
@@ -236,14 +236,13 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
     // Set the current tile layer based on user selection
     var currentLayer = showSatellite ? satelliteLayer : defaultLayer;
 
-    // Use a setTimeout to add the new layer after a short delay
-    setTimeout(function () {
-        map.addLayer(currentLayer);
+    // Add the new layer to the map
+    map.addLayer(currentLayer);
 
-        // Show customers around the current location with or without names based on the toggle state
-        showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
-    }, 100);
+    // Show customers around the current location with or without names based on the toggle state
+    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
 });
+
 
 
 
