@@ -5,83 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer List Map</title>
-    <!-- Add Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
-        #map {
-            height: 500px;
-        }
-
-        .custom-marker {
-            background-color: red;
-            border-radius: 50%;
-            width: 10px;
-            height: 10px;
-            border: none;
-        }
-
-        .custom-customer-marker {
-            background-color: blue;
-        }
-
-        .leaflet-tooltip {
-            font-size: 10px;
-        }
-
-        .toggle-btn {
-            margin-bottom: 10px;
-        }
-		
-		 #toggle-layer-btn {
-        display: none;
-		}
-        #search-container {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        #customer-search-input {
-            padding: 5px;
-            width: 200px;
-            margin-right: 5px;
-        }
-
-        #search-btn {
-            padding: 5px;
-        }
-
-        #info-container {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
- /* Move the madeWithLove style to the bottom-right corner and minimize it */
-#made-with-love {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    font-size: 10px; /* Adjust the font size for minimization */
-    color: red;
-    z-index: 1000; /* Ensure it appears above other elements */
-}
-
-/* Add margin to the bottom of the body to create space for the message */
-body {
-    margin-bottom: 40px; /* Adjust the margin as needed */
-}
-
-
-        #current-location-info,
-        #selected-customer-info {
-            width: 300px;
-            margin-bottom: 5px;
-        }
-
-        .leaflet-tooltip-custom {
-            font-size: 10px; /* Adjust the font size as needed */
-            background-color: white; /* Specify the background color */
-            border: 1px solid #ccc; /* Specify the border color */
-        }
+        #map { height: 500px; }
+        .custom-marker { background-color: red; border-radius: 50%; width: 10px; height: 10px; border: none; }
+        .custom-customer-marker { background-color: blue; }
+        .leaflet-tooltip { font-size: 10px; }
+        .toggle-btn { margin-bottom: 10px; }
+        #toggle-layer-btn { display: none; }
+        #search-container { text-align: center; margin-bottom: 10px; }
+        #customer-search-input { padding: 5px; width: 200px; margin-right: 5px; }
+        #search-btn { padding: 5px; }
+        #info-container, .leaflet-tooltip-custom { text-align: center; margin-bottom: 10px; }
+        body { margin-bottom: 40px; }
+        #current-location-info, #selected-customer-info { width: 300px; margin-bottom: 5px; }
+        #made-with-love { position: fixed; bottom: 10px; right: 10px; font-size: 10px; color: red; z-index: 1000; }
+        #customer-list { list-style-type: decimal; padding-left: 20px; }
+        #customer-list li { font-size: 12px; }
     </style>
 </head>
 
