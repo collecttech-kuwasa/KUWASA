@@ -481,8 +481,9 @@ try {
     map.addControl(removeRouteBtn);
 
 } catch (error) {
-    console.error("Error creating routing control:", error);
+    console.error("Error creating routing control:", error.message, error.stack);
 }
+
 
     } else {
         alert('Please select a customer and get your current location before showing directions.');
