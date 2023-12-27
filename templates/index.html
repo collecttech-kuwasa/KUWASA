@@ -102,9 +102,17 @@ body {
         <label for="selected-customer-info">Selected Customer:</label>
         <input type="text" id="selected-customer-info" readonly>
     </div>
+<!-- Add a button to trigger displaying the customer list -->
+<button id="show-customer-list-btn">Show Customer List</button>
 
     <!-- Leaflet Map -->
     <div id="map"></div>
+	
+	<!-- Add this new section for customer list -->
+<div id="customer-list-container">
+    <h2>Customer List</h2>
+    <ul id="customer-list"></ul>
+</div>
 
     <!-- Include Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -276,6 +284,10 @@ L.control.layers(baseLayers).addTo(map);
 // Add the default layer to the map initially
 defaultLayer.addTo(map);
 
+// Event listener for the new button to show the customer list
+    document.querySelector("#show-customer-list-btn").addEventListener("click", showCustomerList);
+
+
 // Add an event listener for the toggle button
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
     showSatellite = !showSatellite;
@@ -293,9 +305,50 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
 });
 
+// Function to show the list of customers
+    function showCustomerList() {
+        if (currentLocation) {
+            var nearbyCustomers = getNearbyCustomers(currentLocation, 10); // Get the nearest 10 customers
+            var customerListContainer = document.getElementById('customer-list');
+            customerListContainer.innerHTML = ''; // Clear existing list
 
+            // Populate the list with customer information
+            nearbyCustomers.forEach(function (customer) {
+                var listItem = document.createElement('li');
+                listItem.innerHTML = `<strong>${customer.customername}</strong> - ${customer.mobileNumber}`;
+                customerListContainer.appendChild(listItem);
+            });
 
+            // Scroll to the customer list container
+            document.getElementById('customer-list-container').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            alert('Please get your current location before showing the customer list.');
+        }
+}
+ // Function to get the nearest customers based on the current location
+    function getNearbyCustomers(currentLocation, limit) {
+        var radius = 15000; // in meters
+        var nearbyCustomers = customers.filter(function (customer) {
+            var distance = calculateDistance(
+                currentLocation.lat, currentLocation.lng,
+                customer.latitude, customer.longitude
+            );
+            return distance <= radius;
+        });
 
+        // Sort customers by distance and limit the result to the specified number
+        nearbyCustomers.sort(function (a, b) {
+            return calculateDistance(
+                currentLocation.lat, currentLocation.lng,
+                a.latitude, a.longitude
+            ) - calculateDistance(
+                currentLocation.lat, currentLocation.lng,
+                b.latitude, b.longitude
+            );
+        });
+
+        return nearbyCustomers.slice(0, limit);
+    }
                 // Function to calculate distance between two points using Haversine formula
                 function calculateDistance(lat1, lon1, lat2, lon2) {
                     var R = 6371000; // Radius of the earth in meters
