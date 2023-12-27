@@ -133,7 +133,6 @@ var removeRouteBtn;
             var currentLocationInfo = document.getElementById('current-location-info');
             var selectedCustomerInfo = document.getElementById('selected-customer-info');
             var directionsLayer;
-			 var showNames = false; // Add this line
 
             // Check if the user's preferred zoom level is stored in localStorage
             var userZoomLevel = localStorage.getItem('userZoomLevel');
@@ -178,23 +177,8 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                     return recommendedZoomLevel;
                 };
 
-function displayCustomerList(nearbyCustomers) {
-    // Display up to the top 10 nearby customers
-    var maxCustomersToShow = Math.min(nearbyCustomers.length, 10);
-    var customerListHTML = '';
-
-    for (var i = 0; i < maxCustomersToShow; i++) {
-        var customer = nearbyCustomers[i];
-        // Append customer name to the list
-        customerListHTML += `<li>${customer.customername}</li>`;
-    }
-
-    // Update the customer list in the HTML
-    document.getElementById('customer-list').innerHTML = `<ul>${customerListHTML}</ul>`;
-}
-
                 // Function to show customers around the current location
-  function showCustomersAround(currentLocation, showNames) {
+                function showCustomersAround(currentLocation, showNames) {
                     // Clear existing markers
                     markers.forEach(function (marker) {
                         map.removeLayer(marker);
@@ -253,12 +237,6 @@ function displayCustomerList(nearbyCustomers) {
                     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
                 }
 
-// Check if currentLocation is defined
-    if (!currentLocation || !currentLocation.lat || !currentLocation.lng) {
-        console.error("Invalid currentLocation:", currentLocation);
-        return;
-    }
-
 // Define separate instances for OpenStreetMap and Google satellite imagery
 var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
@@ -313,23 +291,6 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
 
     // Show customers around the current location with or without names based on the toggle state
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
-	
-	// Sort nearby customers by distance
-    nearbyCustomers.sort(function (a, b) {
-        var distanceA = calculateDistance(
-            currentLocation.lat, currentLocation.lng,
-            a.latitude, a.longitude
-        );
-        var distanceB = calculateDistance(
-            currentLocation.lat, currentLocation.lng,
-            b.latitude, b.longitude
-        );
-        return distanceA - distanceB;
-    });
-
-    // Call the displayCustomerList function to show the list
-    displayCustomerList(nearbyCustomers);
-	
 });
 
 
@@ -360,34 +321,45 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
 // Function to get the current location and zoom to it
 function getCurrentLocation() {
     console.log("Getting current location...");
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            currentLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
 
-    return new Promise((resolve, reject) => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    currentLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    console.log("Current Location:", currentLocation);
-                    resolve(currentLocation);  // Resolve with the currentLocation object
-                },
-                function (error) {
-                    console.error("Error getting current location:", error);
-                    reject(error);
-                }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
-            reject("Geolocation not supported");
-        }
-    }).catch(error => {
-        console.error("Error in getCurrentLocation Promise:", error);
-    });
+            console.log("Current Location:", currentLocation);
+
+            // Remove the previous current location marker, if it exists
+            if (currentLocationMarker) {
+                map.removeLayer(currentLocationMarker);
+            }
+
+            // Add a marker for the current location with a different color
+            currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: '<div class="leaflet-div-icon"></div>',
+                    iconSize: [8, 8],
+                    iconAnchor: [4, 4],
+                }),
+            }).addTo(map);
+
+            // Get the recommended zoom level based on the desired feature size
+            var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
+
+            // Set the view to the new current location with the recommended zoom level
+            map.setView([currentLocation.lat, currentLocation.lng], 19); // Set the zoom level to 19
+
+            // Show customers around the new current location without names by default
+            showCustomersAround(currentLocation, false);
+        }, function (error) {
+            console.error("Error getting current location:", error);
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
 }
-
-
-
 
 
                 // Function to get popup content for a customer
@@ -526,20 +498,9 @@ try {
                 showDirectionsBtn.addEventListener('click', showDirections);
                 document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
- document.querySelector("#get-location-btn").addEventListener("click", function () {
-    getCurrentLocation()
-        .then(function () {
-            if (!currentLocation || !currentLocation.lat || !currentLocation.lng) {
-                console.error("Invalid currentLocation:", currentLocation);
-                return;
-            }
+                // Event listener for the "Get My Location" button
+        document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
 
-            showCustomersAround(currentLocation, document.querySelector("#toggle-names-btn").checked);
-        })
-        .catch(function (error) {
-            console.error("Error:", error);
-        });
-});
 
         // Event listener for the map minimize event
         map.on('minimize', function (e) {
@@ -573,20 +534,7 @@ try {
             } else {
                 console.error("No customer data available.");
             }
-			// Get the current location once the DOM is loaded
-    getCurrentLocation()
-        .then(function () {
-            if (!currentLocation || !currentLocation.lat || !currentLocation.lng) {
-                console.error("Invalid currentLocation:", currentLocation);
-                return;
-            }
-
-            // Initialize the map and other functionality
-            initializeMap();
-        })
-        .catch(function (error) {
-            console.error("Error:", error);
-        });
+			
 			// Made with ❤️ by CollectTech Innovations
 var madeWithLove = document.createElement('p');
 madeWithLove.innerHTML = 'Made with <span style="color: red; font-size: 12px;">❤️</span> by CollectTech Innovations';
