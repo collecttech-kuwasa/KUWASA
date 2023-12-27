@@ -304,6 +304,9 @@ map.once('zoomend', function () {
 
     // Show customers around the new current location without names by default
     showCustomersAround(currentLocation, false);
+	
+	}); // Add this line to close the map.once block
+
         }, function (error) {
             console.error("Error getting current location:", error);
         });
