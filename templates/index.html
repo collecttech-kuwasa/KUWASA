@@ -261,50 +261,49 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
                 // Declare currentLocation globally
                 var currentLocation;
 
-                // Function to get the current location
-                function getCurrentLocation() {
-                    console.log("Getting current location...");
-                    if (navigator.geolocation) {
-                        navigator.geolocation.watchPosition(function (position) {
-                            currentLocation = {
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude
-                            };
+           function getCurrentLocation() {
+    console.log("Getting current location...");
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(function (position) {
+            currentLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
 
-                            console.log("Current Location:", currentLocation);
+            console.log("Current Location:", currentLocation);
 
-                            // Remove the previous current location marker, if it exists
-                            if (currentLocationMarker) {
-                                map.removeLayer(currentLocationMarker);
-                            }
+            // Remove the previous current location marker, if it exists
+            if (currentLocationMarker) {
+                map.removeLayer(currentLocationMarker);
+            }
 
-                            // Add a marker for the current location with a different color
-                            currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
-                                icon: L.divIcon({
-                                    className: 'custom-marker',
-                                    html: '<div class="leaflet-div-icon"></div>',
-                                    iconSize: [8, 8],
-                                    iconAnchor: [4, 4],
-                                }),
-                            }).addTo(map);
+            // Add a marker for the current location with a different color
+            currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: '<div class="leaflet-div-icon"></div>',
+                    iconSize: [8, 8],
+                    iconAnchor: [4, 4],
+                }),
+            }).addTo(map);
 
-                            // Get the recommended zoom level based on the desired feature size
-                            var recommendedZoomLevel = calculateRecommendedZoomLevel(5); // Adjust desired feature size as needed
+            // Get the recommended zoom level based on the desired feature size
+            var recommendedZoomLevel = calculateRecommendedZoomLevel(5); // Adjust desired feature size as needed
 
-                            // Fly to the new current location with a smooth animation and set the recommended zoom level
-                            map.flyTo([currentLocation.lat, currentLocation.lng], recommendedZoomLevel);
+            // Fly to the new current location with a smooth animation and set the recommended zoom level
+            map.flyTo([currentLocation.lat, currentLocation.lng], recommendedZoomLevel);
 
-                            // Store the current zoom level in localStorage
-                            localStorage.setItem('userZoomLevel', recommendedZoomLevel);
+            // Store the current zoom level in localStorage
+            localStorage.setItem('userZoomLevel', recommendedZoomLevel);
 
-                            // Show customers around the new current location without names by default
-                            showCustomersAround(currentLocation, false);
-                        }, function (error) {
-                            console.error("Error getting current location:", error);
-                        });
-                    } else {
-                        alert("Geolocation is not supported by this browser.");
-                    }
+            // Show customers around the new current location without names by default
+            showCustomersAround(currentLocation, false);
+        }, function (error) {
+            console.error("Error getting current location:", error);
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
                 }
 
                 // Function to get popup content for a customer
