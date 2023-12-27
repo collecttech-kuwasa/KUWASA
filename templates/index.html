@@ -22,7 +22,7 @@
         #made-with-love { position: fixed; bottom: 10px; right: 10px; font-size: 10px; color: red; z-index: 1000; }
         #customer-list { list-style-type: decimal; padding-left: 20px; }
         #customer-list li { font-size: 12px; }
-		#customer-list-heading { font-size: 16; }
+		#customer-list-heading { font-size: 14; }
     </style>
 </head>
 
@@ -60,24 +60,24 @@
     <ul id="customer-list"><!-- Populate the list with customer information including house number and distance -->
         <script>
             // Set the maximum number of customers to display
-            var maxCustomersToShow = 5; // Change this number to your desired limit
+            var maxCustomersToShow = 10; // Change this number to your desired limit
 
             // Populate the list with customer information including house number and distance
-               nearbyCustomers.forEach(function (customer) {
-                var listItem = document.createElement('li');
-                var distance = calculateDistance(
-                    currentLocation.lat, currentLocation.lng,
-                    customer.latitude, customer.longitude
-                );
+    nearbyCustomers.forEach(function (customer) {
+        var listItem = document.createElement('li');
+        var distance = calculateDistance(
+            currentLocation.lat, currentLocation.lng,
+            customer.latitude, customer.longitude
+        );
 
-                // Check if distance is undefined and handle it
-                var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
+        // Check if distance is undefined and handle it
+        var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
 
-                listItem.innerHTML = `<strong>${index + 1}. ${customer.customername}</strong> - (HN: ${customer.house_number}, ${distanceText})`;
-                document.getElementById('customer-list').appendChild(listItem);
-            });
-			
-		// Get the count of nearby customers
+        listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number}, ${distanceText})`;
+        document.getElementById('customer-list').appendChild(listItem);
+    });
+
+    // Get the count of nearby customers
     var nearbyCustomersCount = nearbyCustomers.length;
 
     // Get the reference to the "Nearby Customers" label
@@ -89,6 +89,12 @@
     } else {
         nearbyCustomersLabel.style.display = 'none';
     }
+
+    // Debugging log statements
+    console.log("Nearby Customers:", nearbyCustomers);
+    console.log("Nearby Customers Count:", nearbyCustomersCount);
+    console.log("Label Display Style:", nearbyCustomersLabel.style.display);
+
         </script></ul>
 </div>
 
