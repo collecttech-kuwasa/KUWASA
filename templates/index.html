@@ -290,14 +290,20 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
             // Get the recommended zoom level based on the desired feature size
             var recommendedZoomLevel = calculateRecommendedZoomLevel(5); // Adjust desired feature size as needed
 
-            // Fly to the new current location with a smooth animation and set the recommended zoom level
-            map.flyTo([currentLocation.lat, currentLocation.lng], recommendedZoomLevel);
+           // Fly to the new current location with a smooth animation
+map.flyTo([currentLocation.lat, currentLocation.lng], recommendedZoomLevel, {
+    duration: 2, // Animation duration in seconds
+    easeLinearity: 0.5, // Animation easing, adjust as needed
+    animate: true
+});
 
-            // Store the current zoom level in localStorage
-            localStorage.setItem('userZoomLevel', recommendedZoomLevel);
+// When the flyTo animation is complete, set the recommended zoom level and show customers around
+map.once('zoomend', function () {
+    // Set the recommended zoom level in localStorage
+    localStorage.setItem('userZoomLevel', recommendedZoomLevel);
 
-            // Show customers around the new current location without names by default
-            showCustomersAround(currentLocation, false);
+    // Show customers around the new current location without names by default
+    showCustomersAround(currentLocation, false);
         }, function (error) {
             console.error("Error getting current location:", error);
         });
