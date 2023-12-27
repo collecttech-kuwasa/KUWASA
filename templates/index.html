@@ -360,13 +360,14 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
 function getCurrentLocation() {
     console.log("Getting current location...");
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            currentLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-
-            console.log("Current Location:", currentLocation);
+        navigator.geolocation.getCurrentPosition(
+    function (position) {
+        // Success callback
+        currentLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+        console.log("Current Location:", currentLocation);
 
             // Remove the previous current location marker, if it exists
             if (currentLocationMarker) {
@@ -536,7 +537,7 @@ try {
                 showDirectionsBtn.addEventListener('click', showDirections);
                 document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
-                document.querySelector("#get-location-btn").addEventListener("click", function () {
+     document.querySelector("#get-location-btn").addEventListener("click", function () {
     getCurrentLocation();
     showCustomersAround(currentLocation, document.querySelector("#toggle-names-btn").checked);
 });
