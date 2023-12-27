@@ -478,7 +478,11 @@ function getCurrentLocation() {
                 document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
                 // Event listener for the "Get My Location" button
-        document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
+        document.addEventListener("click", function(event) {
+    if (event.target && event.target.id === "get-location-btn") {
+        getCurrentLocation();
+    }
+});
 
 
         // Event listener for the map minimize event
