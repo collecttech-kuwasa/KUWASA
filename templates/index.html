@@ -435,15 +435,14 @@ function getCurrentLocation() {
 var routingControl;
 var removeRouteBtn;
 
-// Function to show directions and distance
 function showDirections() {
     if (currentLocationInfo.value && selectedCustomerInfo.value) {
         // Check if there's an existing routing control
         if (routingControl) {
             // Remove the existing routing control from the map
             map.removeControl(routingControl);
-            // Remove the button from the map container
-            removeRouteBtn.remove();
+            // Remove the button container from the map container
+            buttonContainer.remove();
         }
 
         // Get current location and customer coordinates
@@ -465,12 +464,16 @@ function showDirections() {
             // Add the routing control to the map
             routingControl.addTo(map);
 
+            // Create a button container
+            buttonContainer = document.createElement('div');
+            buttonContainer.style.position = 'absolute';
+            buttonContainer.style.top = '10px';
+            buttonContainer.style.right = '10px';
+            map.getContainer().appendChild(buttonContainer);
+
             // Create a button to remove the routing control
             removeRouteBtn = document.createElement('button');
             removeRouteBtn.innerHTML = 'Remove Route';
-            removeRouteBtn.style.position = 'absolute';
-            removeRouteBtn.style.top = '10px';
-            removeRouteBtn.style.right = '10px';
             removeRouteBtn.style.padding = '5px';
             removeRouteBtn.style.background = 'white';
             removeRouteBtn.style.border = '1px solid #ccc';
@@ -478,12 +481,12 @@ function showDirections() {
             removeRouteBtn.addEventListener('click', function () {
                 // Remove the routing control from the map
                 map.removeControl(routingControl);
-                // Remove the button from the map container
-                removeRouteBtn.remove();
+                // Remove the button container from the map container
+                buttonContainer.remove();
             });
 
-            // Append the button to the map container
-            map.getContainer().appendChild(removeRouteBtn);
+            // Append the button to the button container
+            buttonContainer.appendChild(removeRouteBtn);
         } catch (error) {
             console.error("Error creating routing control:", error);
         }
@@ -491,7 +494,6 @@ function showDirections() {
         alert('Please select a customer and get your current location before showing directions.');
     }
 }
-
 
 
 
