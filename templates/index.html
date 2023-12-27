@@ -433,6 +433,7 @@ function getCurrentLocation() {
                     }
                 }
 var routingControl;
+var removeRouteBtn;
 
 // Function to show directions and distance
 function showDirections() {
@@ -441,6 +442,8 @@ function showDirections() {
         if (routingControl) {
             // Remove the existing routing control from the map
             map.removeControl(routingControl);
+            // Remove the button from the map container
+            removeRouteBtn.remove();
         }
 
         // Get current location and customer coordinates
@@ -460,9 +463,8 @@ function showDirections() {
             }).addTo(map);
 
             // Create a button to remove the routing control
-            var removeRouteBtn = document.createElement('button');
-            removeRouteBtn.innerHTML = '&#10006;'; // Unicode for 'X' symbol
-            removeRouteBtn.title = 'Remove Route';
+            removeRouteBtn = document.createElement('button');
+            removeRouteBtn.innerHTML = 'Remove Route';
             removeRouteBtn.style.position = 'absolute';
             removeRouteBtn.style.top = '10px';
             removeRouteBtn.style.right = '10px';
@@ -473,22 +475,12 @@ function showDirections() {
             removeRouteBtn.addEventListener('click', function () {
                 // Remove the routing control from the map
                 map.removeControl(routingControl);
+                // Remove the button from the map container
+                removeRouteBtn.remove();
             });
 
             // Append the button to the map container
             map.getContainer().appendChild(removeRouteBtn);
-
-            // Hide the standard Leaflet tooltip
-            routingControl.getPlan().options.createMarker = function (i, wp, nWps) {
-                return L.marker(wp.latLng, {
-                    draggable: true,
-                    icon: new L.DivIcon({
-                        className: 'leaflet-div-icon',
-                        html: '&#9679;', // Unicode for a dot or any other preferred symbol
-                        iconSize: [12, 12],
-                    })
-                });
-            };
         } catch (error) {
             console.error("Error creating routing control:", error);
         }
