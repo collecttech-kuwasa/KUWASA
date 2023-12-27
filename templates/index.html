@@ -458,19 +458,28 @@ function showDirections() {
         ];
 
         try {
-            routingControl = L.Routing.control({
-                waypoints: waypoints,
-                routeWhileDragging: true
-            });
-
             // Create a container element for the routing control
             var routingContainer = document.createElement('div');
 
+            // Add the container to the map's container
+            map.getContainer().appendChild(routingContainer);
+
+            routingControl = L.Routing.control({
+                waypoints: waypoints,
+                routeWhileDragging: true,
+                createMarker: function (i, waypoint, n) {
+                    return L.marker(waypoint.latLng, {
+                        draggable: true,
+                        icon: L.divIcon({
+                            className: 'leaflet-div-icon',
+                        }),
+                    });
+                },
+                containerClassName: 'leaflet-routing-container', // Explicitly set the container class
+            });
+
             // Add the routing control to the container
             routingControl.addTo(routingContainer);
-
-            // Append the container to the map's container
-            map.getContainer().appendChild(routingContainer);
 
             // Add a button to remove the route
             removeRouteBtn = document.createElement('button');
@@ -489,6 +498,7 @@ function showDirections() {
         alert('Please select a customer and get your current location before showing directions.');
     }
 }
+
 
 
 
