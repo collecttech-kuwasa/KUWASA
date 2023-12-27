@@ -537,10 +537,12 @@ try {
                 showDirectionsBtn.addEventListener('click', showDirections);
                 document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
-     document.querySelector("#get-location-btn").addEventListener("click", function () {
+   document.querySelector("#get-location-btn").addEventListener("click", function () {
     getCurrentLocation();
+    console.log("After getCurrentLocation:", currentLocation);
     showCustomersAround(currentLocation, document.querySelector("#toggle-names-btn").checked);
 });
+
 
 
 
