@@ -467,14 +467,14 @@ try {
     });
 
     // Add the routing control to the map
-    map.addControl(routingControl);
+    routingControl.addTo(map);
 
     // Add a button to remove the route
     removeRouteBtn = document.createElement('button');
     removeRouteBtn.textContent = 'Remove Route';
     removeRouteBtn.addEventListener('click', function () {
         // Remove the routing control from the map
-        map.removeControl(routingControl);
+        map.removeLayer(routingControl);
         // Remove the button from the map
         map.removeControl(removeRouteBtn);
     });
@@ -483,7 +483,6 @@ try {
 } catch (error) {
     console.error("Error creating routing control:", error.message, error.stack);
 }
-
 
     } else {
         alert('Please select a customer and get your current location before showing directions.');
