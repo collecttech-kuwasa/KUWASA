@@ -121,6 +121,8 @@ body {
     <script>
         var selectedCustomerInfo = document.getElementById('selected-customer-info');
         var showNames = false; // Add this line
+		// Declare removeRouteBtn globally
+var removeRouteBtn;
 
         document.addEventListener('DOMContentLoaded', function () {
             var map;
@@ -434,6 +436,7 @@ function getCurrentLocation() {
                 }
 var routingControl;
 var removeRouteBtn;
+
 // Function to show directions and distance
 function showDirections() {
     if (currentLocationInfo.value && selectedCustomerInfo.value) {
@@ -462,19 +465,16 @@ function showDirections() {
             // Add the routing control to the map
             routingControl.addTo(map);
 
-            // Create a button to remove the routing control
-            var removeRouteBtn = L.DomUtil.create('button', 'leaflet-routing-remove-btn leaflet-bar', document.querySelector('.leaflet-top.leaflet-right'));
-            removeRouteBtn.innerHTML = 'Remove Route';
-            removeRouteBtn.style.background = 'white';
-            removeRouteBtn.style.border = '1px solid #ccc';
-            removeRouteBtn.style.cursor = 'pointer';
-
-            // Add an event listener to remove the routing control when the button is clicked
-            L.DomEvent.on(removeRouteBtn, 'click', function (event) {
-                L.DomEvent.stop(event); // Stop the event propagation
+            // Add a button to remove the route
+            removeRouteBtn = document.createElement('button');
+            removeRouteBtn.textContent = 'Remove Route';
+            removeRouteBtn.addEventListener('click', function () {
                 // Remove the routing control from the map
                 map.removeControl(routingControl);
+                // Remove the button from the map
+                map.removeControl(removeRouteBtn);
             });
+            map.addControl(removeRouteBtn);
 
         } catch (error) {
             console.error("Error creating routing control:", error);
