@@ -292,7 +292,7 @@ function getCurrentLocation() {
             var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
 
             // Set the view to the new current location with the recommended zoom level
-            map.setView([currentLocation.lat, currentLocation.lng], recommendedZoomLevel);
+            map.setView([currentLocation.lat, currentLocation.lng], 18); // Set the zoom level to 18
 
             // Show customers around the new current location without names by default
             showCustomersAround(currentLocation, false);
@@ -303,7 +303,6 @@ function getCurrentLocation() {
         alert("Geolocation is not supported by this browser.");
     }
 }
-
 
 
                 // Function to get popup content for a customer
