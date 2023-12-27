@@ -22,7 +22,7 @@
         #made-with-love { position: fixed; bottom: 10px; right: 10px; font-size: 10px; color: red; z-index: 1000; }
         #customer-list { list-style-type: decimal; padding-left: 20px; }
         #customer-list li { font-size: 12px; }
-		#customer-list-heading { font-size: 12px; }
+		#customer-list-heading { font-size: 16; }
     </style>
 </head>
 
@@ -76,6 +76,19 @@
                 listItem.innerHTML = `<strong>${index + 1}. ${customer.customername}</strong> - (HN: ${customer.house_number}, ${distanceText})`;
                 document.getElementById('customer-list').appendChild(listItem);
             });
+			
+			 // Get the count of nearby customers
+    var nearbyCustomersCount = nearbyCustomers.length;
+
+    // Get the reference to the "Nearby Customers" label
+    var nearbyCustomersLabel = document.getElementById('customer-list-heading');
+
+    // Hide or show the label based on the count
+    if (nearbyCustomersCount === 0) {
+        nearbyCustomersLabel.style.display = 'none';
+    } else {
+        nearbyCustomersLabel.style.display = 'block'; // or 'inline' or 'inline-block' depending on your layout
+    }
         </script></ul>
 </div>
 
