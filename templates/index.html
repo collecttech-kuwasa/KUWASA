@@ -231,13 +231,13 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
     // Clear existing layers
     map.eachLayer(function (layer) {
         map.removeLayer(layer);
-    }, this);
+    });
 
     // Set the current tile layer based on user selection
     var currentLayer = showSatellite ? satelliteLayer : defaultLayer;
 
     // Add the new layer to the map
-    map.addLayer(currentLayer);
+    currentLayer.addTo(map);
 
     // Show customers around the current location with or without names based on the toggle state
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
