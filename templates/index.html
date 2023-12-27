@@ -227,19 +227,24 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
 // Add an event listener for the toggle button
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
     showSatellite = !showSatellite;
-    
-    // Clear existing layers
+
+    // Clear existing layers and add the new layer after removal is complete
     map.eachLayer(function (layer) {
         map.removeLayer(layer);
-    });
+    }, this);
 
     // Set the current tile layer based on user selection
     var currentLayer = showSatellite ? satelliteLayer : defaultLayer;
-    map.addLayer(currentLayer);
 
-    // Show customers around the current location with or without names based on the toggle state
-    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
+    // Use a setTimeout to add the new layer after a short delay
+    setTimeout(function () {
+        map.addLayer(currentLayer);
+
+        // Show customers around the current location with or without names based on the toggle state
+        showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
+    }, 100);
 });
+
 
 
                 // Function to calculate distance between two points using Haversine formula
