@@ -434,7 +434,6 @@ function getCurrentLocation() {
                 }
 var routingControl;
 var removeRouteBtn;
-
 // Function to show directions and distance
 function showDirections() {
     if (currentLocationInfo.value && selectedCustomerInfo.value) {
@@ -471,7 +470,8 @@ function showDirections() {
             removeRouteBtn.style.cursor = 'pointer';
 
             // Add an event listener to remove the routing control when the button is clicked
-            L.DomEvent.on(removeRouteBtn, 'click', function () {
+            L.DomEvent.on(removeRouteBtn, 'click', function (event) {
+                L.DomEvent.stop(event); // Stop the event propagation
                 // Remove the routing control from the map
                 map.removeControl(routingControl);
             });
