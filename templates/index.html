@@ -114,6 +114,11 @@ body {
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 
+
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+<script src="https://unpkg.com/osrm@5.5.1/dist/osrm.js"></script>
+
+
     <!-- Access customer data directly from Flask -->
     <script>
         var customers = {{ customers_json | safe }};
@@ -453,32 +458,32 @@ function showDirections() {
         var currentCoords = currentLocationInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
         var customerCoords = selectedCustomerInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
 
-        // Create a new routing control using leaflet-routing-machine API
-        // Create a new routing control using leaflet-routing-machine
+       // Create a new OSRM routing control
+var control = L.Routing.osrm();
+
+// Set waypoints
 var waypoints = [
     L.latLng(currentCoords[0], currentCoords[1]),
     L.latLng(customerCoords[0], customerCoords[1])
 ];
 
-try {
-    routingControl = L.Routing.control({
-        waypoints: waypoints,
-        routeWhileDragging: true
-    });
+// Calculate route
+control.setWaypoints(waypoints);
 
-    // Add the routing control to the map
-    routingControl.addTo(map);
+// Add the routing control to the map
+control.addTo(map);
 
-    // Add a button to remove the route
-    removeRouteBtn = document.createElement('button');
-    removeRouteBtn.textContent = 'Remove Route';
-    removeRouteBtn.addEventListener('click', function () {
-        // Remove the routing control from the map
-        map.removeLayer(routingControl);
-        // Remove the button from the map
-        map.removeControl(removeRouteBtn);
-    });
-    map.addControl(removeRouteBtn);
+// Add a button to remove the route
+removeRouteBtn = document.createElement('button');
+removeRouteBtn.textContent = 'Remove Route';
+removeRouteBtn.addEventListener('click', function () {
+    // Remove the routing control from the map
+    map.removeLayer(control);
+    // Remove the button from the map
+    map.removeControl(removeRouteBtn);
+});
+map.addControl(removeRouteBtn);
+
 
 } catch (error) {
     console.error("Error creating routing control:", error.message, error.stack);
