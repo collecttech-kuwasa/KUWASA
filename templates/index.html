@@ -432,13 +432,16 @@ function getCurrentLocation() {
                         selectedCustomerInfo.value = "No customer found"; // Update the message if no customer is found
                     }
                 }
+// Declare a variable to store the routing control
+var routingControl;
 
-                // Function to show directions and distance
-                function showDirections() {
-                    if (currentLocationInfo.value && selectedCustomerInfo.value) {
-                        // Clear existing directions layer
-                        if (directionsLayer){
-            map.removeControl(directionsLayer);
+// Function to show directions and distance
+function showDirections() {
+    if (currentLocationInfo.value && selectedCustomerInfo.value) {
+        // Check if there's an existing routing control
+        if (routingControl) {
+            // Remove the existing routing control from the map
+            map.removeControl(routingControl);
         }
 
         // Get current location and customer coordinates
@@ -452,24 +455,21 @@ function getCurrentLocation() {
         ];
 
         try {
-            var control = L.Routing.control({
+            routingControl = L.Routing.control({
                 waypoints: waypoints,
                 routeWhileDragging: true
             }).addTo(map);
 
-            // Update the directionsLayer variable
-            directionsLayer = control;
+            // Create a button to remove the routing control
+            var removeRouteBtn = document.createElement('button');
+            removeRouteBtn.textContent = 'Remove Route';
+            removeRouteBtn.addEventListener('click', function () {
+                // Remove the routing control from the map
+                map.removeControl(routingControl);
+            });
 
-            // Check if the control has a valid route
-            if (control.getPlan() && control.getPlan().routes && control.getPlan().routes.length > 0) {
-                // Extract the route from the control
-                var route = control.getPlan().routes[0];
-
-                // Fit the map to the bounds of the route
-                map.fitBounds(route.bounds);
-            } else {
-                console.error("Error: No valid route found.");
-            }
+            // Append the button to the map container
+            map.getContainer().appendChild(removeRouteBtn);
         } catch (error) {
             console.error("Error creating routing control:", error);
         }
