@@ -62,7 +62,7 @@
             // Set the maximum number of customers to display
             var maxCustomersToShow = 10; // Change this number to your desired limit
 
- // Populate the list with customer information including house number and distance
+     // Populate the list with customer information including house number and distance
     nearbyCustomers.forEach(function (customer) {
         var listItem = document.createElement('li');
         var distance = calculateDistance(
@@ -73,7 +73,7 @@
         // Check if distance is undefined and handle it
         var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
 
-        listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number}, ${distanceText})`;
+        listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'Hamna namba'}, ${distanceText})`;
         document.getElementById('customer-list').appendChild(listItem);
     });
 
@@ -84,21 +84,12 @@
     var nearbyCustomersLabel = document.getElementById('customer-list-heading');
 
     // Show or hide the label based on the count
-    if (nearbyCustomersCount > 0) {
-        nearbyCustomersLabel.style.display = 'block'; // or 'inline' or 'inline-block' depending on your layout
-    } else {
-        nearbyCustomersLabel.style.display = 'none';
-    }
+    nearbyCustomersLabel.style.display = nearbyCustomersCount > 0 ? 'block' : 'none';
 
     // Debugging log statements
     console.log("Nearby Customers:", nearbyCustomers);
     console.log("Nearby Customers Count:", nearbyCustomersCount);
     console.log("Label Display Style:", nearbyCustomersLabel.style.display);
-
-    // If the label is still not displaying, try forcing it to be visible after a delay
-    setTimeout(function () {
-        nearbyCustomersLabel.style.display = 'block';
-    }, 1000); // Adjust the delay as needed
         </script></ul>
 </div>
 
