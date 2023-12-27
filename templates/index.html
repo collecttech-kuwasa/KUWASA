@@ -111,7 +111,17 @@ body {
 	<!-- Add this new section for customer list -->
 <div id="customer-list-container">
     <h2>Customer List</h2>
-    <ul id="customer-list"></ul>
+    <ul id="customer-list">
+	// Populate the list with customer information including house number and distance
+nearbyCustomers.forEach(function (customer) {
+    var listItem = document.createElement('li');
+    var distance = calculateDistance(
+        currentLocation.lat, currentLocation.lng,
+        customer.latitude, customer.longitude
+    ).toFixed(2); // Round the distance to two decimal places
+    listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number}, ${distance}m)`;
+    customerListContainer.appendChild(listItem);
+});</ul>
 </div>
 
     <!-- Include Leaflet JS -->
@@ -325,30 +335,41 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
             alert('Please get your current location before showing the customer list.');
         }
 }
- // Function to get the nearest customers based on the current location
-    function getNearbyCustomers(currentLocation, limit) {
-        var radius = 15000; // in meters
-        var nearbyCustomers = customers.filter(function (customer) {
-            var distance = calculateDistance(
-                currentLocation.lat, currentLocation.lng,
-                customer.latitude, customer.longitude
-            );
-            return distance <= radius;
-        });
+ // Modify the function definition to include house number and distance
+function getNearbyCustomers(currentLocation, limit) {
+    var radius = 15000; // in meters
+    var nearbyCustomers = customers.filter(function (customer) {
+        var distance = calculateDistance(
+            currentLocation.lat, currentLocation.lng,
+            customer.latitude, customer.longitude
+        );
+        return distance <= radius;
+    });
 
-        // Sort customers by distance and limit the result to the specified number
-        nearbyCustomers.sort(function (a, b) {
-            return calculateDistance(
-                currentLocation.lat, currentLocation.lng,
-                a.latitude, a.longitude
-            ) - calculateDistance(
-                currentLocation.lat, currentLocation.lng,
-                b.latitude, b.longitude
-            );
-        });
+    // Sort customers by distance and limit the result to the specified number
+    nearbyCustomers.sort(function (a, b) {
+        return calculateDistance(
+            currentLocation.lat, currentLocation.lng,
+            a.latitude, a.longitude
+        ) - calculateDistance(
+            currentLocation.lat, currentLocation.lng,
+            b.latitude, b.longitude
+        );
+    });
 
-        return nearbyCustomers.slice(0, limit);
-    }
+    // Add house number and distance to each customer in the result
+    return nearbyCustomers.slice(0, limit).map(function (customer) {
+        var distance = calculateDistance(
+            currentLocation.lat, currentLocation.lng,
+            customer.latitude, customer.longitude
+        ).toFixed(2); // Round the distance to two decimal places
+        return {
+            ...customer,
+            distance: distance,
+        };
+    });
+}
+
                 // Function to calculate distance between two points using Haversine formula
                 function calculateDistance(lat1, lon1, lat2, lon2) {
                     var R = 6371000; // Radius of the earth in meters
