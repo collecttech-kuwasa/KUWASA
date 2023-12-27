@@ -432,7 +432,6 @@ function getCurrentLocation() {
                         selectedCustomerInfo.value = "No customer found"; // Update the message if no customer is found
                     }
                 }
-// Declare a variable to store the routing control
 var routingControl;
 
 // Function to show directions and distance
@@ -462,7 +461,15 @@ function showDirections() {
 
             // Create a button to remove the routing control
             var removeRouteBtn = document.createElement('button');
-            removeRouteBtn.textContent = 'Remove Route';
+            removeRouteBtn.innerHTML = '&#10006;'; // Unicode for 'X' symbol
+            removeRouteBtn.title = 'Remove Route';
+            removeRouteBtn.style.position = 'absolute';
+            removeRouteBtn.style.top = '10px';
+            removeRouteBtn.style.right = '10px';
+            removeRouteBtn.style.padding = '5px';
+            removeRouteBtn.style.background = 'white';
+            removeRouteBtn.style.border = '1px solid #ccc';
+            removeRouteBtn.style.cursor = 'pointer';
             removeRouteBtn.addEventListener('click', function () {
                 // Remove the routing control from the map
                 map.removeControl(routingControl);
@@ -470,6 +477,18 @@ function showDirections() {
 
             // Append the button to the map container
             map.getContainer().appendChild(removeRouteBtn);
+
+            // Hide the standard Leaflet tooltip
+            routingControl.getPlan().options.createMarker = function (i, wp, nWps) {
+                return L.marker(wp.latLng, {
+                    draggable: true,
+                    icon: new L.DivIcon({
+                        className: 'leaflet-div-icon',
+                        html: '&#9679;', // Unicode for a dot or any other preferred symbol
+                        iconSize: [12, 12],
+                    })
+                });
+            };
         } catch (error) {
             console.error("Error creating routing control:", error);
         }
