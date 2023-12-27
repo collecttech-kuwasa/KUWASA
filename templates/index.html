@@ -452,22 +452,22 @@ function showDirections() {
         var currentCoords = currentLocationInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
         var customerCoords = selectedCustomerInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
 
-        // Create a new routing control
-        var waypoints = [
-            L.latLng(currentCoords[0], currentCoords[1]),
-            L.latLng(customerCoords[0], customerCoords[1])
-        ];
+       // Create a new routing control
+var waypoints = [
+    L.latLng(currentCoords[0], currentCoords[1]),
+    L.latLng(customerCoords[0], customerCoords[1])
+];
 
-        try {
-            routingControl = L.Routing.control({
-                waypoints: waypoints,
-                routeWhileDragging: true
-            });
+try {
+    routingControl = L.Routing.control({
+        waypoints: waypoints,
+        routeWhileDragging: true
+    });
 
-            // Add the routing control to the map
-            routingControl.addTo(map);
+    // Add the routing control to the map
+    map.addControl(routingControl);
 
-           // Add a button to remove the route
+    // Add a button to remove the route
     removeRouteBtn = document.createElement('button');
     removeRouteBtn.textContent = 'Remove Route';
     removeRouteBtn.addEventListener('click', function () {
@@ -478,9 +478,9 @@ function showDirections() {
     });
     map.addControl(removeRouteBtn);
 
-        } catch (error) {
-            console.error("Error creating routing control:", error);
-        }
+} catch (error) {
+    console.error("Error creating routing control:", error);
+}
     } else {
         alert('Please select a customer and get your current location before showing directions.');
     }
