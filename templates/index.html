@@ -101,9 +101,6 @@ body {
         <br>
         <label for="selected-customer-info">Selected Customer:</label>
         <input type="text" id="selected-customer-info" readonly>
-		<!-- Add a button to show directions -->
-<button id="show-directions-btn">Show Directions</button>
-
     </div>
 
     <!-- Leaflet Map -->
@@ -279,10 +276,6 @@ L.control.layers(baseLayers).addTo(map);
 // Add the default layer to the map initially
 defaultLayer.addTo(map);
 
-// Add an event listener for the show directions button
-document.querySelector("#show-directions-btn").addEventListener("click", showDirections);
-
-
 // Add an event listener for the toggle button
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
     showSatellite = !showSatellite;
@@ -447,38 +440,51 @@ var removeRouteBtn;
 
 // Function to show directions and distance
 function showDirections() {
-    if (currentLocationInfo.value && markers.length > 0) {
-        var currentCoords = currentLocationInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
-
-        // Create waypoints for routing (current location to each customer)
-        var waypoints = [L.latLng(currentCoords[0], currentCoords[1])];
-        markers.forEach(marker => {
-            var latLng = marker.getLatLng();
-            waypoints.push(L.latLng(latLng.lat, latLng.lng));
-        });
-
-        try {
-            routingControl = L.Routing.control({
-                waypoints: waypoints,
-                routeWhileDragging: true
-            });
-
-            // Add the routing control to the map
-            map.addControl(routingControl);
-
-            // Add a button to remove the route
-            removeRouteBtn = document.createElement('button');
-            removeRouteBtn.textContent = 'Remove Route';
-            removeRouteBtn.addEventListener('click', function () {
-                // Remove the routing control from the map
-                map.removeControl(routingControl);
-                // Remove the button from the map
-                map.removeControl(removeRouteBtn);
-            });
-            map.addControl(removeRouteBtn);
-        } catch (error) {
-            console.error("Error creating routing control:", error.message, error.stack);
+    if (currentLocationInfo.value && selectedCustomerInfo.value) {
+        // Check if there's an existing routing control
+        if (routingControl) {
+            // Remove the existing routing control from the map
+            map.removeLayer(routingControl);
+            // Remove the button from the map
+            map.removeControl(removeRouteBtn);
         }
+
+        // Get current location and customer coordinates
+        var currentCoords = currentLocationInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
+        var customerCoords = selectedCustomerInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
+
+        // Create a new routing control using leaflet-routing-machine API
+        // Create a new routing control using leaflet-routing-machine
+var waypoints = [
+    L.latLng(currentCoords[0], currentCoords[1]),
+    L.latLng(customerCoords[0], customerCoords[1])
+];
+
+try {
+    routingControl = L.Routing.control({
+        waypoints: waypoints,
+        routeWhileDragging: true
+    });
+
+    // Add the routing control to the map
+    map.addControl(routingControl);
+
+    // Add a button to remove the route
+    removeRouteBtn = document.createElement('button');
+    removeRouteBtn.textContent = 'Remove Route';
+    removeRouteBtn.addEventListener('click', function () {
+        // Remove the routing control from the map
+        map.removeControl(routingControl);
+        // Remove the button from the map
+        map.removeControl(removeRouteBtn);
+    });
+    map.addControl(removeRouteBtn);
+
+} catch (error) {
+    console.error("Error creating routing control:", error.message, error.stack);
+}
+
+
     } else {
         alert('Please select a customer and get your current location before showing directions.');
     }
