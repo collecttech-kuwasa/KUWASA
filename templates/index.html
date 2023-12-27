@@ -224,9 +224,11 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
                 }
 
-                // Add an event listener for the toggle button
+// Add an event listener for the toggle button
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
     showSatellite = !showSatellite;
+    
+    // Clear existing layers
     map.eachLayer(function (layer) {
         map.removeLayer(layer);
     });
@@ -235,6 +237,7 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
     var currentLayer = showSatellite ? satelliteLayer : defaultLayer;
     map.addLayer(currentLayer);
 
+    // Show customers around the current location with or without names based on the toggle state
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
 });
 
