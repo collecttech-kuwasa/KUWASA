@@ -111,7 +111,26 @@ body {
 	<!-- Add this new section for customer list -->
 <div id="customer-list-container">
     <h2>Customer List</h2>
-    <ul id="customer-list"></ul>
+    <ul id="customer-list"><!-- Populate the list with customer information including house number and distance -->
+        <script>
+            // Set the maximum number of customers to display
+            var maxCustomersToShow = 5; // Change this number to your desired limit
+
+            // Populate the list with customer information including house number and distance
+            nearbyCustomers.slice(0, maxCustomersToShow).forEach(function (customer, index) {
+                var listItem = document.createElement('li');
+                var distance = calculateDistance(
+                    currentLocation.lat, currentLocation.lng,
+                    customer.latitude, customer.longitude
+                );
+
+                // Check if distance is undefined and handle it
+                var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
+
+                listItem.innerHTML = `<strong>${index + 1}. ${customer.customername}</strong> - (HN: ${customer.house_number}, ${distanceText})`;
+                document.getElementById('customer-list').appendChild(listItem);
+            });
+        </script></ul>
 </div>
 
     <!-- Include Leaflet JS -->
