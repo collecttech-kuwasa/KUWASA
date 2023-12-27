@@ -62,7 +62,7 @@
             // Set the maximum number of customers to display
             var maxCustomersToShow = 10; // Change this number to your desired limit
 
-            // Populate the list with customer information including house number and distance
+ // Populate the list with customer information including house number and distance
     nearbyCustomers.forEach(function (customer) {
         var listItem = document.createElement('li');
         var distance = calculateDistance(
@@ -95,6 +95,10 @@
     console.log("Nearby Customers Count:", nearbyCustomersCount);
     console.log("Label Display Style:", nearbyCustomersLabel.style.display);
 
+    // If the label is still not displaying, try forcing it to be visible after a delay
+    setTimeout(function () {
+        nearbyCustomersLabel.style.display = 'block';
+    }, 1000); // Adjust the delay as needed
         </script></ul>
 </div>
 
