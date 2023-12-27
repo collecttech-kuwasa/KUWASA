@@ -77,15 +77,17 @@
                 document.getElementById('customer-list').appendChild(listItem);
             });
 			
-		 // Get the count of nearby customers
+		// Get the count of nearby customers
     var nearbyCustomersCount = nearbyCustomers.length;
 
     // Get the reference to the "Nearby Customers" label
     var nearbyCustomersLabel = document.getElementById('customer-list-heading');
 
-    // Hide or show the label based on the count
+    // Show or hide the label based on the count
     if (nearbyCustomersCount > 0) {
         nearbyCustomersLabel.style.display = 'block'; // or 'inline' or 'inline-block' depending on your layout
+    } else {
+        nearbyCustomersLabel.style.display = 'none';
     }
         </script></ul>
 </div>
