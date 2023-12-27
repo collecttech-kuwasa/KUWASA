@@ -177,6 +177,19 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                     return recommendedZoomLevel;
                 };
 
+// Function to update the nearby customers list
+        function updateNearbyCustomersList(nearbyCustomers) {
+            var listContainer = document.getElementById('nearby-customers-list');
+            listContainer.innerHTML = ''; // Clear previous entries
+
+            // Display up to 10 nearby customers
+            for (var i = 0; i < Math.min(nearbyCustomers.length, 10); i++) {
+                var customer = nearbyCustomers[i];
+                var listItem = document.createElement('li');
+                listItem.textContent = customer.customername;
+                listContainer.appendChild(listItem);
+            }
+        }
                 // Function to show customers around the current location
                 function showCustomersAround(currentLocation, showNames) {
                     // Clear existing markers
@@ -219,6 +232,18 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                                 var clickedCoords = clickedMarker.getLatLng();
                                 selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
                             });
+							
+							// Add markers for nearby customers
+            var nearbyCustomers = [];
+            for (var i = 0; i < Math.min(customers.length, 10); i++) {
+                var customer = customers[i];
+                var distance = calculateDistance(
+                    currentLocation.lat, currentLocation.lng,
+                    customer.latitude, customer.longitude
+                );
+if (distance <= radius) {
+                    nearbyCustomers.push(customer);
+
 
                         // Use tooltip instead of popup if showNames is true
                         if (showNames) {
@@ -233,6 +258,8 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                         customerMarker.addTo(map);
                     }
 
+// Update the nearby customers list
+            updateNearbyCustomersList(nearbyCustomers);
                     // Show current location in the textbox
                     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
                 }
