@@ -463,8 +463,14 @@ function showDirections() {
                 routeWhileDragging: true
             });
 
-            // Add the routing control to the map
-            map.addControl(routingControl);
+            // Create a container element for the routing control
+            var routingContainer = document.createElement('div');
+
+            // Add the routing control to the container
+            routingContainer.appendChild(routingControl.onAdd(map));
+
+            // Append the container to the map's container
+            map.getContainer().appendChild(routingContainer);
 
             // Add a button to remove the route
             removeRouteBtn = document.createElement('button');
