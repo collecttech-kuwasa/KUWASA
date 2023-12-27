@@ -126,14 +126,11 @@
 
             // Check if customers are available
             if (customers.length > 0) {
-                // Calculate the average coordinates of all customers
-                var averageLat = customers.reduce((sum, customer) => sum + customer.latitude, 0) / customers.length;
-                var averageLng = customers.reduce((sum, customer) => sum + customer.longitude, 0) / customers.length;
+               // Set a default zoom level and center the map
+var defaultZoomLevel = 14;
+var defaultCenter = [yourDefaultLat, yourDefaultLng]; // Replace with your desired default center
 
-                // Set a default zoom level
-                var defaultZoomLevel = 14;
-
-                map = L.map('map').setView([averageLat, averageLng], defaultZoomLevel);
+map = L.map('map').setView(defaultCenter, defaultZoomLevel);
 
                 // Default OpenStreetMap tile layer
                 var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -227,11 +224,20 @@
                     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
                 }
 
-                // Update the event listener to toggle customer names display
-                document.querySelector("#toggle-names-btn").addEventListener("change", function () {
-                    showNames = document.querySelector("#toggle-names-btn").checked;
-                    showCustomersAround(map.getCenter(), showNames);
-                });
+                // Add an event listener for the toggle button
+document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
+    showSatellite = !showSatellite;
+    map.eachLayer(function (layer) {
+        map.removeLayer(layer);
+    });
+
+    // Set the current tile layer based on user selection
+    var currentLayer = showSatellite ? satelliteLayer : defaultLayer;
+    map.addLayer(currentLayer);
+
+    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
+});
+
 
                 // Function to calculate distance between two points using Haversine formula
                 function calculateDistance(lat1, lon1, lat2, lon2) {
