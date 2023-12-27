@@ -467,7 +467,7 @@ function showDirections() {
             var routingContainer = document.createElement('div');
 
             // Add the routing control to the container
-            routingContainer.appendChild(routingControl.onAdd(map));
+            routingControl.addTo(routingContainer);
 
             // Append the container to the map's container
             map.getContainer().appendChild(routingContainer);
