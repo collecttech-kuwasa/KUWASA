@@ -312,12 +312,20 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
             var customerListContainer = document.getElementById('customer-list');
             customerListContainer.innerHTML = ''; // Clear existing list
 
-            // Populate the list with customer information
-            nearbyCustomers.forEach(function (customer) {
-                var listItem = document.createElement('li');
-                listItem.innerHTML = `<strong>${customer.customername}</strong> - ${customer.mobileNumber}`;
-                customerListContainer.appendChild(listItem);
-            });
+            // Populate the list with customer information including house number and distance
+nearbyCustomers.forEach(function (customer) {
+    var listItem = document.createElement('li');
+    var distance = calculateDistance(
+        currentLocation.lat, currentLocation.lng,
+        customer.latitude, customer.longitude
+    );
+
+    // Check if distance is undefined and handle it
+    var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
+
+    listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number}, ${distanceText})`;
+    document.getElementById('customer-list').appendChild(listItem);
+});
 
             // Scroll to the customer list container
             document.getElementById('customer-list-container').scrollIntoView({ behavior: 'smooth' });
