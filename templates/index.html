@@ -22,7 +22,7 @@
         #made-with-love { position: fixed; bottom: 10px; right: 10px; font-size: 10px; color: red; z-index: 1000; }
         #customer-list { list-style-type: decimal; padding-left: 20px; }
         #customer-list li { font-size: 12px; }
-		#customer-list-heading { font-size: 13px; }
+		#customer-list-heading { font-size: 12px; }
     </style>
 </head>
 
@@ -47,8 +47,12 @@
 <button id="show-customer-list-btn">Show Customer List</button>
 
     <!-- Leaflet Map -->
-	<button id="show-customer-list-btn">Show Customer List</button>
+	
     <div id="map"></div>
+    <div id="customer-list-container">
+        <h2 id="customer-list-heading">Nearby Customers</h2>
+        <ul id="customer-list"></ul>
+    </div>
 	
 	<!-- Add this new section for customer list -->
 <div id="customer-list-container">
