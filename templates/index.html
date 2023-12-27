@@ -224,20 +224,40 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
                 }
 
+// Define separate instances for OpenStreetMap and Google satellite imagery
+var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 18
+});
+
+var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    attribution: '© Google contributors',
+    maxZoom: 18,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+});
+
+// Add the default layer to the map initially
+defaultLayer.addTo(map);
+
 // Add an event listener for the toggle button
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
     showSatellite = !showSatellite;
 
-    // Update the URL of the tile layer based on the toggle state
+    // Remove the current layers from the map
+    map.removeLayer(defaultLayer);
+    map.removeLayer(satelliteLayer);
+
+    // Add the appropriate layer based on the toggle state
     if (showSatellite) {
-        defaultLayer.setUrl('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        satelliteLayer.addTo(map);
     } else {
-        defaultLayer.setUrl('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}');
+        defaultLayer.addTo(map);
     }
 
     // Show customers around the current location with or without names based on the toggle state
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
 });
+
 
 
                 // Function to calculate distance between two points using Haversine formula
