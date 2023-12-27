@@ -437,12 +437,11 @@ function getCurrentLocation() {
 var routingControl;
 var removeRouteBtn;
 
-// Function to show directions and distance
 function showDirections() {
     if (currentLocationInfo.value && selectedCustomerInfo.value) {
         // Check if there's an existing routing control
         if (routingControl) {
-           // Remove the existing routing control from the map
+            // Remove the existing routing control from the map
             map.removeControl(routingControl);
             // Remove the button from the map
             map.removeControl(removeRouteBtn);
@@ -467,17 +466,16 @@ function showDirections() {
             // Add the routing control to the map
             routingControl.addTo(map);
 
-           // Add a button to remove the route
-    removeRouteBtn = document.createElement('button');
-    removeRouteBtn.textContent = 'Remove Route';
-    removeRouteBtn.addEventListener('click', function () {
-        // Remove the routing control from the map
-        map.removeControl(routingControl);
-        // Remove the button from the map
-        map.removeControl(removeRouteBtn);
-    });
-    map.addControl(removeRouteBtn);
-
+            // Add a button to remove the route
+            removeRouteBtn = document.createElement('button');
+            removeRouteBtn.textContent = 'Remove Route';
+            removeRouteBtn.addEventListener('click', function () {
+                // Remove the routing control from the map
+                map.removeControl(routingControl);
+                // Remove the button from the map
+                map.removeControl(removeRouteBtn);
+            });
+            map.addControl(removeRouteBtn);
         } catch (error) {
             console.error("Error creating routing control:", error);
         }
@@ -485,11 +483,6 @@ function showDirections() {
         alert('Please select a customer and get your current location before showing directions.');
     }
 }
-
-
-
-
-
 
                 // Add a button to show directions
                 var showDirectionsBtn = document.createElement('button');
