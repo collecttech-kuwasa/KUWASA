@@ -283,6 +283,7 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
 
 
 
+
                 // Function to calculate distance between two points using Haversine formula
                 function calculateDistance(lat1, lon1, lat2, lon2) {
                     var R = 6371000; // Radius of the earth in meters
@@ -478,11 +479,7 @@ function getCurrentLocation() {
                 document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
                 // Event listener for the "Get My Location" button
-        document.addEventListener("click", function(event) {
-    if (event.target && event.target.id === "get-location-btn") {
-        getCurrentLocation();
-    }
-});
+        document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
 
 
         // Event listener for the map minimize event
@@ -532,12 +529,13 @@ document.body.appendChild(madeWithLove);
     </script>
 
     <!-- Add buttons to trigger getting the current location, toggle customer names, and toggle map layer -->
-    <div class="toggle-btn">
-        <button id="get-location-btn">Get My Location</button>
-        <label for="toggle-names-btn">Show Names</label>
-        <input type="checkbox" id="toggle-names-btn">
-       <!--  <button id="toggle-layer-btn">Toggle Layer</button>  -->
-    </div>
+<div class="toggle-btn">
+    <button id="get-location-btn">Get My Location</button>
+    <label for="toggle-names-btn">Show Names</label>
+    <input type="checkbox" id="toggle-names-btn">
+    <button id="toggle-layer-btn">Toggle Layer</button>
+</div>
+
 
 </body>
 
