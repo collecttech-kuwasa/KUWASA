@@ -443,7 +443,7 @@ function showDirections() {
         // Check if there's an existing routing control
         if (routingControl) {
             // Remove the existing routing control from the map
-            map.removeControl(routingControl);
+            map.removeLayer(routingControl);
             // Remove the button from the map
             map.removeControl(removeRouteBtn);
         }
@@ -452,7 +452,7 @@ function showDirections() {
         var currentCoords = currentLocationInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
         var customerCoords = selectedCustomerInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
 
-        // Create a new routing control using leaflet-routing-machine
+        // Create a new routing control using leaflet-routing-machine API
         var waypoints = [
             L.latLng(currentCoords[0], currentCoords[1]),
             L.latLng(customerCoords[0], customerCoords[1])
@@ -472,7 +472,7 @@ function showDirections() {
             removeRouteBtn.textContent = 'Remove Route';
             removeRouteBtn.addEventListener('click', function () {
                 // Remove the routing control from the map
-                map.removeControl(routingControl);
+                map.removeLayer(routingControl);
                 // Remove the button from the map
                 map.removeControl(removeRouteBtn);
             });
@@ -485,6 +485,7 @@ function showDirections() {
         alert('Please select a customer and get your current location before showing directions.');
     }
 }
+
 
 
                 // Add a button to show directions
