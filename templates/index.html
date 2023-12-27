@@ -83,13 +83,18 @@
     // Get the reference to the "Nearby Customers" label
     var nearbyCustomersLabel = document.getElementById('customer-list-heading');
 
-    // Show or hide the label based on the count
-    nearbyCustomersLabel.style.display = nearbyCustomersCount > 0 ? 'block' : 'none';
-
     // Debugging log statements
     console.log("Nearby Customers:", nearbyCustomers);
     console.log("Nearby Customers Count:", nearbyCustomersCount);
-    console.log("Label Display Style:", nearbyCustomersLabel.style.display);
+
+    // Show or hide the label based on the count
+    if (nearbyCustomersCount > 0) {
+        nearbyCustomersLabel.style.display = 'block'; // or 'inline' or 'inline-block' depending on your layout
+        console.log("Setting label display style to 'block'");
+    } else {
+        nearbyCustomersLabel.style.display = 'none';
+        console.log("Setting label display style to 'none'");
+    }
         </script></ul>
 </div>
 
