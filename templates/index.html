@@ -133,6 +133,7 @@ var removeRouteBtn;
             var currentLocationInfo = document.getElementById('current-location-info');
             var selectedCustomerInfo = document.getElementById('selected-customer-info');
             var directionsLayer;
+			 var showNames = false; // Add this line
 
             // Check if the user's preferred zoom level is stored in localStorage
             var userZoomLevel = localStorage.getItem('userZoomLevel');
@@ -369,7 +370,7 @@ function getCurrentLocation() {
                         lng: position.coords.longitude
                     };
                     console.log("Current Location:", currentLocation);
-                    resolve();
+                    resolve(currentLocation);  // Resolve with the currentLocation object
                 },
                 function (error) {
                     console.error("Error getting current location:", error);
@@ -380,8 +381,12 @@ function getCurrentLocation() {
             alert("Geolocation is not supported by this browser.");
             reject("Geolocation not supported");
         }
+    }).catch(error => {
+        console.error("Error in getCurrentLocation Promise:", error);
     });
 }
+
+
 
 
 
@@ -536,10 +541,6 @@ try {
         });
 });
 
-
-
-
-
         // Event listener for the map minimize event
         map.on('minimize', function (e) {
             // Store the current zoom level in localStorage when the map is minimized
@@ -572,7 +573,20 @@ try {
             } else {
                 console.error("No customer data available.");
             }
-			
+			// Get the current location once the DOM is loaded
+    getCurrentLocation()
+        .then(function () {
+            if (!currentLocation || !currentLocation.lat || !currentLocation.lng) {
+                console.error("Invalid currentLocation:", currentLocation);
+                return;
+            }
+
+            // Initialize the map and other functionality
+            initializeMap();
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+        });
 			// Made with ❤️ by CollectTech Innovations
 var madeWithLove = document.createElement('p');
 madeWithLove.innerHTML = 'Made with <span style="color: red; font-size: 12px;">❤️</span> by CollectTech Innovations';
