@@ -117,7 +117,7 @@ body {
             var maxCustomersToShow = 5; // Change this number to your desired limit
 
             // Populate the list with customer information including house number and distance
-            nearbyCustomers.slice(0, maxCustomersToShow).forEach(function (customer, index) {
+               nearbyCustomers.forEach(function (customer) {
                 var listItem = document.createElement('li');
                 var distance = calculateDistance(
                     currentLocation.lat, currentLocation.lng,
@@ -144,6 +144,7 @@ body {
     <!-- Access customer data directly from Flask -->
     <script>
         var customers = {{ customers_json | safe }};
+		var nearbyCustomers = [];
     </script>
 
     <script>
