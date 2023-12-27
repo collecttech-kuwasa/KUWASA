@@ -289,7 +289,7 @@ function getCurrentLocation() {
             }).addTo(map);
 
             // Get the recommended zoom level based on the desired feature size
-            var recommendedZoomLevel = calculateRecommendedZoomLevel(18); // Adjust desired feature size as needed
+            var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
 
             // Set the view to the new current location with the recommended zoom level
             map.setView([currentLocation.lat, currentLocation.lng], recommendedZoomLevel);
