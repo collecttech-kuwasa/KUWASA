@@ -315,25 +315,25 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
                 // Declare currentLocation globally
                 var currentLocation;
 
-// Function to get the current location and zoom to it
+// Function to get the current location and update the marker
 function getCurrentLocation() {
     console.log("Getting current location...");
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-            currentLocation = {
+            var newLocation = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
 
-            console.log("Current Location:", currentLocation);
+            console.log("New Location:", newLocation);
 
             // Remove the previous current location marker, if it exists
             if (currentLocationMarker) {
                 map.removeLayer(currentLocationMarker);
             }
 
-            // Add a marker for the current location with a different color
-            currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+            // Add a marker for the new current location with a different color
+            currentLocationMarker = L.marker([newLocation.lat, newLocation.lng], {
                 icon: L.divIcon({
                     className: 'custom-marker',
                     html: '<div class="leaflet-div-icon"></div>',
@@ -342,14 +342,14 @@ function getCurrentLocation() {
                 }),
             }).addTo(map);
 
-            // Get the recommended zoom level based on the desired feature size
-            var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
+            // Update the currentLocation variable
+            currentLocation = newLocation;
 
-            // Set the view to the new current location with the recommended zoom level
-            map.setView([currentLocation.lat, currentLocation.lng], 18); // Set the zoom level to 18
+            // Update the current location in the textbox
+            currentLocationInfo.value = `Latitude: ${newLocation.lat.toFixed(6)}, Longitude: ${newLocation.lng.toFixed(6)}`;
 
             // Show customers around the new current location without names by default
-            showCustomersAround(currentLocation, false);
+            showCustomersAround(newLocation, false);
         }, function (error) {
             console.error("Error getting current location:", error);
         });
@@ -357,6 +357,7 @@ function getCurrentLocation() {
         alert("Geolocation is not supported by this browser.");
     }
 }
+
 
 
                 // Function to get popup content for a customer
