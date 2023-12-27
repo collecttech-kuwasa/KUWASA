@@ -442,7 +442,7 @@ function showDirections() {
         // Check if there's an existing routing control
         if (routingControl) {
             // Remove the existing routing control from the map
-            map.removeLayer(routingControl);
+            map.removeControl(routingControl);
             // Remove the button from the map
             map.removeControl(removeRouteBtn);
         }
@@ -464,14 +464,14 @@ function showDirections() {
             });
 
             // Add the routing control to the map
-            map.addLayer(routingControl);
+            map.addControl(routingControl);
 
             // Add a button to remove the route
             removeRouteBtn = document.createElement('button');
             removeRouteBtn.textContent = 'Remove Route';
             removeRouteBtn.addEventListener('click', function () {
                 // Remove the routing control from the map
-                map.removeLayer(routingControl);
+                map.removeControl(routingControl);
                 // Remove the button from the map
                 map.removeControl(removeRouteBtn);
             });
