@@ -261,10 +261,10 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
                 // Declare currentLocation globally
                 var currentLocation;
 
-           function getCurrentLocation() {
+function getCurrentLocation() {
     console.log("Getting current location...");
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(function (position) {
+        navigator.geolocation.getCurrentPosition(function (position) {
             currentLocation = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
@@ -290,30 +290,29 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
             // Get the recommended zoom level based on the desired feature size
             var recommendedZoomLevel = calculateRecommendedZoomLevel(5); // Adjust desired feature size as needed
 
-           // Fly to the new current location with a smooth animation
-map.flyTo([currentLocation.lat, currentLocation.lng], recommendedZoomLevel, {
-    duration: 2, // Animation duration in seconds
-    easeLinearity: 0.5, // Animation easing, adjust as needed
-    animate: true
-});
+            // Fly to the new current location with a smooth animation
+            map.flyTo([currentLocation.lat, currentLocation.lng], recommendedZoomLevel, {
+                duration: 2, // Animation duration in seconds
+                easeLinearity: 0.5, // Animation easing, adjust as needed
+                animate: true
+            });
 
-// When the flyTo animation is complete, set the recommended zoom level and show customers around
-map.once('zoomend', function () {
-    // Set the recommended zoom level in localStorage
-    localStorage.setItem('userZoomLevel', recommendedZoomLevel);
+            // When the flyTo animation is complete, set the recommended zoom level and show customers around
+            map.once('zoomend', function () {
+                // Set the recommended zoom level in localStorage
+                localStorage.setItem('userZoomLevel', recommendedZoomLevel);
 
-    // Show customers around the new current location without names by default
-    showCustomersAround(currentLocation, false);
-	
-	}); // Add this line to close the map.once block
-
+                // Show customers around the new current location without names by default
+                showCustomersAround(currentLocation, false);
+            });
         }, function (error) {
             console.error("Error getting current location:", error);
         });
     } else {
         alert("Geolocation is not supported by this browser.");
     }
-                }
+}
+
 
                 // Function to get popup content for a customer
                 function getCustomerPopupContent(customer) {
