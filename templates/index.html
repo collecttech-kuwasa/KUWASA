@@ -228,19 +228,20 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
     showSatellite = !showSatellite;
 
-    // Toggle visibility of the layers instead of removing and adding
-    defaultLayer.setOpacity(showSatellite ? 0 : 1);
-    satelliteLayer.setOpacity(showSatellite ? 1 : 0);
+    // Ensure both layers are added to the map
+    defaultLayer.addTo(map);
+    satelliteLayer.addTo(map);
+
+    // Toggle visibility of the layers
+    if (showSatellite) {
+        defaultLayer.remove();
+    } else {
+        satelliteLayer.remove();
+    }
 
     // Show customers around the current location with or without names based on the toggle state
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
 });
-
-
-
-
-
-
 
                 // Function to calculate distance between two points using Haversine formula
                 function calculateDistance(lat1, lon1, lat2, lon2) {
