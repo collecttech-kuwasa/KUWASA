@@ -53,7 +53,7 @@
 	
 	<!-- Add this new section for customer list -->
 <div id="customer-list-container">
-        <h2 id="customer-list-heading">Nearby Customers</h2>
+        <h2 id="customer-list-heading" style="display: none;">Nearby Customers</h2>
         <ul id="customer-list"></ul>
     </div>
 	
@@ -77,16 +77,14 @@
                 document.getElementById('customer-list').appendChild(listItem);
             });
 			
-			 // Get the count of nearby customers
+		 // Get the count of nearby customers
     var nearbyCustomersCount = nearbyCustomers.length;
 
     // Get the reference to the "Nearby Customers" label
     var nearbyCustomersLabel = document.getElementById('customer-list-heading');
 
     // Hide or show the label based on the count
-    if (nearbyCustomersCount === 0) {
-        nearbyCustomersLabel.style.display = 'none';
-    } else {
+    if (nearbyCustomersCount > 0) {
         nearbyCustomersLabel.style.display = 'block'; // or 'inline' or 'inline-block' depending on your layout
     }
         </script></ul>
