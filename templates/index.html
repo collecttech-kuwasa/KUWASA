@@ -464,7 +464,7 @@ function showDirections() {
             routingControl.addTo(map);
 
             // Create a button to remove the routing control
-            var removeRouteBtn = L.DomUtil.create('button', 'leaflet-routing-remove-btn leaflet-bar', buttonContainer);
+            var removeRouteBtn = L.DomUtil.create('button', 'leaflet-routing-remove-btn leaflet-bar', document.querySelector('.leaflet-top.leaflet-right'));
             removeRouteBtn.innerHTML = 'Remove Route';
             removeRouteBtn.style.background = 'white';
             removeRouteBtn.style.border = '1px solid #ccc';
