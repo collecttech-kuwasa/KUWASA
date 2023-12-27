@@ -263,8 +263,22 @@ L.control.layers(baseLayers).addTo(map);
 // Add the default layer to the map initially
 defaultLayer.addTo(map);
 
+// Add an event listener for the toggle button
+document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
+    showSatellite = !showSatellite;
 
+    // Set the active layer based on the toggle state
+    if (showSatellite) {
+        map.removeLayer(defaultLayer);
+        satelliteLayer.addTo(map);
+    } else {
+        map.removeLayer(satelliteLayer);
+        defaultLayer.addTo(map);
+    }
 
+    // Show customers around the current location with or without names based on the toggle state
+    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
+});
 
 
 
@@ -513,8 +527,13 @@ document.body.appendChild(madeWithLove);
         });
     </script>
 
-
-
+    <!-- Add buttons to trigger getting the current location, toggle customer names, and toggle map layer -->
+    <div class="toggle-btn">
+        <button id="get-location-btn">Get My Location</button>
+        <label for="toggle-names-btn">Show Names</label>
+        <input type="checkbox" id="toggle-names-btn">
+        <button id="toggle-layer-btn">Toggle Layer</button>
+    </div>
 
 </body>
 
