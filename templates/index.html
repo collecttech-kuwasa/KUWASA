@@ -464,7 +464,7 @@ function showDirections() {
             });
 
             // Add the routing control to the map
-            routingControl.addTo(map);
+            map.addControl(routingControl);
 
             // Add a button to remove the route
             removeRouteBtn = document.createElement('button');
@@ -483,6 +483,7 @@ function showDirections() {
         alert('Please select a customer and get your current location before showing directions.');
     }
 }
+
 
                 // Add a button to show directions
                 var showDirectionsBtn = document.createElement('button');
