@@ -252,6 +252,12 @@ function displayCustomerList(nearbyCustomers) {
                     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
                 }
 
+// Check if currentLocation is defined
+    if (!currentLocation || !currentLocation.lat || !currentLocation.lng) {
+        console.error("Invalid currentLocation:", currentLocation);
+        return;
+    }
+
 // Define separate instances for OpenStreetMap and Google satellite imagery
 var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
