@@ -460,7 +460,10 @@ function showDirections() {
             routingControl = L.Routing.control({
                 waypoints: waypoints,
                 routeWhileDragging: true
-            }).addTo(map);
+            });
+
+            // Add the routing control to the map
+            routingControl.addTo(map);
 
             // Create a button to remove the routing control
             removeRouteBtn = document.createElement('button');
@@ -488,6 +491,7 @@ function showDirections() {
         alert('Please select a customer and get your current location before showing directions.');
     }
 }
+
 
 
 
