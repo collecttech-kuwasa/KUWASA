@@ -177,8 +177,23 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                     return recommendedZoomLevel;
                 };
 
+function displayCustomerList(nearbyCustomers) {
+    // Display up to the top 10 nearby customers
+    var maxCustomersToShow = Math.min(nearbyCustomers.length, 10);
+    var customerListHTML = '';
+
+    for (var i = 0; i < maxCustomersToShow; i++) {
+        var customer = nearbyCustomers[i];
+        // Append customer name to the list
+        customerListHTML += `<li>${customer.customername}</li>`;
+    }
+
+    // Update the customer list in the HTML
+    document.getElementById('customer-list').innerHTML = `<ul>${customerListHTML}</ul>`;
+}
+
                 // Function to show customers around the current location
-                function showCustomersAround(currentLocation, showNames) {
+  function showCustomersAround(currentLocation, showNames) {
                     // Clear existing markers
                     markers.forEach(function (marker) {
                         map.removeLayer(marker);
@@ -291,6 +306,23 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
 
     // Show customers around the current location with or without names based on the toggle state
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
+	
+	// Sort nearby customers by distance
+    nearbyCustomers.sort(function (a, b) {
+        var distanceA = calculateDistance(
+            currentLocation.lat, currentLocation.lng,
+            a.latitude, a.longitude
+        );
+        var distanceB = calculateDistance(
+            currentLocation.lat, currentLocation.lng,
+            b.latitude, b.longitude
+        );
+        return distanceA - distanceB;
+    });
+
+    // Call the displayCustomerList function to show the list
+    displayCustomerList(nearbyCustomers);
+	
 });
 
 
@@ -498,8 +530,11 @@ try {
                 showDirectionsBtn.addEventListener('click', showDirections);
                 document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
-                // Event listener for the "Get My Location" button
-        document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
+                document.querySelector("#get-location-btn").addEventListener("click", function () {
+    getCurrentLocation();
+    showCustomersAround(currentLocation, document.querySelector("#toggle-names-btn").checked);
+});
+
 
 
         // Event listener for the map minimize event
