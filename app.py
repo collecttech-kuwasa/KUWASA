@@ -28,9 +28,9 @@ def index():
     cursor = connection.cursor()
 
     cursor.execute("""
-        SELECT customername, accountnumber, controlnumber, meternumber, mobilenumber, house_number, zonename, routename, resident_type,
+        SELECT customername, accountnumber, controlnumber, meternumber, mobilenumber, house_number, zonename, routename, resident_type,street_name,
             ST_Y(ST_Transform(geom, 4326)) AS latitude_column,  
-            ST_X(ST_Transform(geom, 4326)) AS longitude_column 
+            ST_X(ST_Transform(geom, 4326)) AS longitude_column
         FROM gis.customers_debts_with_id;
     """)
     customers = cursor.fetchall()
@@ -48,8 +48,9 @@ def index():
         'zonename': customer[6],
         'routename': customer[7],
         'resident_type': customer[8],
-        'latitude': float(customer[9]) if customer[9] is not None else None,
-        'longitude': float(customer[10]) if customer[10] is not None else None,
+		'street_name': customer[9],
+        'latitude': float(customer[10]) if customer[10] is not None else None,
+        'longitude': float(customer[11]) if customer[11] is not None else None,
     } for customer in customers]
 
     # Use json.dumps to serialize the customer data
@@ -63,7 +64,7 @@ def customer_details(account_number):
     cursor = connection.cursor()
 
     query = """
-        SELECT customername, accountnumber, controlnumber, meternumber, mobilenumber, house_number, zonename, routename, resident_type,
+        SELECT customername, accountnumber, controlnumber, meternumber, mobilenumber, house_number, zonename, routename, resident_type,street_name,
             ST_Y(ST_Transform(geom, 4326)) AS latitude_column,  
             ST_X(ST_Transform(geom, 4326)) AS longitude_column 
         FROM gis.customers_debts_with_id
