@@ -28,7 +28,7 @@ def index():
     cursor = connection.cursor()
 
     cursor.execute("""
-        SELECT customername, accountnumber, controlnumber, meternumber, mobilenumber, house_number, zonename, routename, resident_type,
+        SELECT customername, accountnumber, controlnumber, meternumber, mobilenumber, house_number, zonename, routename, resident_type,street_name,
             ST_Y(ST_Transform(geom, 4326)) AS latitude_column,  
             ST_X(ST_Transform(geom, 4326)) AS longitude_column 
         FROM gis.customers_debts_with_id;
@@ -63,7 +63,7 @@ def customer_details(account_number):
     cursor = connection.cursor()
 
     query = """
-        SELECT customername, accountnumber, controlnumber, meternumber, mobilenumber, house_number, zonename, routename, resident_type,
+        SELECT customername, accountnumber, controlnumber, meternumber, mobilenumber, house_number, zonename, routename, resident_type,street_name,
             ST_Y(ST_Transform(geom, 4326)) AS latitude_column,  
             ST_X(ST_Transform(geom, 4326)) AS longitude_column 
         FROM gis.customers_debts_with_id
