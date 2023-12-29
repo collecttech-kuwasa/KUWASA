@@ -50,6 +50,7 @@ def index():
         'resident_type': customer[8],
         'latitude': float(customer[9]) if customer[9] is not None else None,
         'longitude': float(customer[10]) if customer[10] is not None else None,
+		'street_name': customer[11],
     } for customer in customers]
 
     # Use json.dumps to serialize the customer data
