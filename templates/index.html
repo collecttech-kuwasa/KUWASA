@@ -356,45 +356,61 @@ function getNearbyCustomers(currentLocation, limit) {
 // Function to get the current location and zoom to it
 function getCurrentLocation() {
     console.log("Getting current location...");
+
+    // Specify the desired accuracy (in meters)
+    var desiredAccuracy = 5;
+
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+        accuracy: desiredAccuracy,
+    };
+
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            currentLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                currentLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
 
-            console.log("Current Location:", currentLocation);
+                console.log("Current Location:", currentLocation);
 
-            // Remove the previous current location marker, if it exists
-            if (currentLocationMarker) {
-                map.removeLayer(currentLocationMarker);
-            }
+                // Remove the previous current location marker, if it exists
+                if (currentLocationMarker) {
+                    map.removeLayer(currentLocationMarker);
+                }
 
-            // Add a marker for the current location with a different color
-            currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
-                icon: L.divIcon({
-                    className: 'custom-marker',
-                    html: '<div class="leaflet-div-icon"></div>',
-                    iconSize: [8, 8],
-                    iconAnchor: [4, 4],
-                }),
-            }).addTo(map);
+                // Add a marker for the current location with a different color
+                currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: '<div class="leaflet-div-icon"></div>',
+                        iconSize: [8, 8],
+                        iconAnchor: [4, 4],
+                    }),
+                }).addTo(map);
 
-            // Get the recommended zoom level based on the desired feature size
-            var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
+                // Get the recommended zoom level based on the desired feature size
+                var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
 
-            // Set the view to the new current location with the recommended zoom level
-            map.setView([currentLocation.lat, currentLocation.lng], 19); // Set the zoom level to 19
+                // Set the view to the new current location with the recommended zoom level
+                map.setView([currentLocation.lat, currentLocation.lng], 19); // Set the zoom level to 19
 
-            // Show customers around the new current location without names by default
-            showCustomersAround(currentLocation, false);
-        }, function (error) {
-            console.error("Error getting current location:", error);
-        });
+                // Show customers around the new current location without names by default
+                showCustomersAround(currentLocation, false);
+            },
+            function (error) {
+                console.error("Error getting current location:", error);
+            },
+            options
+        );
     } else {
         alert("Geolocation is not supported by this browser.");
     }
 }
+
 
 
                 // Function to get popup content for a customer
