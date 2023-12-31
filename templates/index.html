@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer List Map</title>
-    
+
     <style>
         #map { height: 500px; }
         .custom-marker { background-color: red; border-radius: 50%; width: 10px; height: 10px; border: none; }
@@ -19,23 +19,21 @@
         #info-container, .leaflet-tooltip-custom { text-align: center; margin-bottom: 10px; }
         body { margin-bottom: 40px; }
         #current-location-info, #selected-customer-info { width: 300px; margin-bottom: 5px; }
-        #made-with-love { position: fixed; bottom: 10px; right: 10px; font-size: 10px; color: red; z-index: 1000; }
+        #made-with-love {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            margin: 4px; /* Add margin for better visibility */
+            background-color: white; /* Add a background color to make it more visible */
+            padding: 5px; /* Add padding for better appearance */
+            border: 1px solid red; /* Add border for better contrast */
+            font-size: 10px;
+            color: red;
+            z-index: 1000;
+        }
         #customer-list { list-style-type: decimal; padding-left: 20px; }
         #customer-list li { font-size: 12px; }
-		#customer-list-heading { font-size: 14; }
-		
-		 #made-with-love {
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        margin: 4px; /* Add margin for better visibility */
-        background-color: white; /* Add a background color to make it more visible */
-        padding: 5px; /* Add padding for better appearance */
-        border: 1px solid red; /* Add border for better contrast */
-        font-size: 10px;
-        color: red;
-        z-index: 1000;
-    }
+        #customer-list-heading { font-size: 14; }
     </style>
 </head>
 
@@ -56,40 +54,33 @@
         <label for="selected-customer-info">Selected Customer:</label>
         <input type="text" id="selected-customer-info" readonly>
     </div>
-<!-- Add a button to trigger displaying the customer list -->
-<button id="show-customer-list-btn">Show Nearby Customers</button>
+
+    <!-- Add a button to trigger displaying the customer list -->
+    <button id="show-customer-list-btn">Show Nearby Customers</button>
 
     <!-- Leaflet Map -->
-	
     <div id="map"></div>
-    
-	
-	<!-- Add this new section for customer list -->
-<div id="customer-list-container">
+
+    <!-- Customer List Container -->
+    <div id="customer-list-container">
         <h2 id="customer-list-heading" style="display: none;">Nearby Customers</h2>
-        
     </div>
-	
+
     <ul id="customer-list"><!-- Populate the list with customer information including house number and distance -->
     </ul>
-</div>
 
-   
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCciMOOFmp5RiF3UGusf9QOZlP-FCMFOXM&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
 
-
-  
     <!-- Access customer data directly from Flask -->
     <script>
         var customers = {{ customers_json | safe }};
-		var nearbyCustomers = [];
+        var nearbyCustomers = [];
     </script>
 
     <script>
         var selectedCustomerInfo = document.getElementById('selected-customer-info');
         var showNames = false; // Add this line
-		// Declare removeRouteBtn globally
-var removeRouteBtn;
+        var removeRouteBtn;
 
         document.addEventListener('DOMContentLoaded', function () {
             var map;
@@ -104,15 +95,15 @@ var removeRouteBtn;
             var userZoomLevel = localStorage.getItem('userZoomLevel');
 
             // Check if customers are available
-          if (customers.length > 0) {
-    // Set a default zoom level and center the map
-    var defaultZoomLevel = 14;
-    var defaultCenter = { lat: -4.893941, lng: 29.673386 }; // Replace with your desired default center
+            if (customers.length > 0) {
+                // Set a default zoom level and center the map
+                var defaultZoomLevel = 14;
+                var defaultCenter = { lat: -4.893941, lng: 29.673386 }; // Replace with your desired default center
 
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: defaultCenter,
-        zoom: defaultZoomLevel,
-    });
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: defaultCenter,
+                    zoom: defaultZoomLevel,
+                });
 
                 function calculateRecommendedZoomLevel(desiredFeatureSize) {
                     var initialScale = 1;
@@ -131,7 +122,7 @@ var removeRouteBtn;
 
                     // If no suitable zoom level is found, return a default value (e.g., 18)
                     return recommendedZoomLevel;
-                };
+                }
 
                 // Function to show customers around the current location
                 function showCustomersAround(currentLocation, showNames) {
@@ -193,94 +184,94 @@ var removeRouteBtn;
                     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
                 }
 
-// Initialize Google Maps
-var map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: -4.893941, lng: 29.673386 }, // Set your default map center
-    zoom: 14, // Set your default zoom level
-});
+                // Initialize Google Maps
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: -4.893941, lng: 29.673386 }, // Set your default map center
+                    zoom: 14, // Set your default zoom level
+                });
 
-// Event listener for the new button to show the customer list
-document.querySelector("#show-customer-list-btn").addEventListener("click", showCustomerList);
+                // Event listener for the new button to show the customer list
+                document.querySelector("#show-customer-list-btn").addEventListener("click", showCustomerList);
 
-// Add an event listener for the toggle button
-document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
-    showSatellite = !showSatellite;
+                // Add an event listener for the toggle button
+                document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
+                    showSatellite = !showSatellite;
 
-    // Set the active layer based on the toggle state
-    if (showSatellite) {
-        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
-    } else {
-        map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-    }
+                    // Set the active layer based on the toggle state
+                    if (showSatellite) {
+                        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+                    } else {
+                        map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+                    }
 
-    // Show customers around the current location with or without names based on the toggle state
-    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
-});
+                    // Show customers around the current location with or without names based on the toggle state
+                    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
+                });
 
-// Function to show the list of customers
-    function showCustomerList() {
-        if (currentLocation) {
-            var nearbyCustomers = getNearbyCustomers(currentLocation, 20); // Get the nearest 20 customers
-            var customerListContainer = document.getElementById('customer-list');
-            customerListContainer.innerHTML = ''; // Clear existing list
+                // Function to show the list of customers
+                function showCustomerList() {
+                    if (currentLocation) {
+                        var nearbyCustomers = getNearbyCustomers(currentLocation, 20); // Get the nearest 20 customers
+                        var customerListContainer = document.getElementById('customer-list');
+                        customerListContainer.innerHTML = ''; // Clear existing list
 
-            // Populate the list with customer information including house number and distance
-nearbyCustomers.forEach(function (customer) {
-    var listItem = document.createElement('li');
-    var distance = calculateDistance(
-        currentLocation.lat, currentLocation.lng,
-        customer.latitude, customer.longitude
-    );
+                        // Populate the list with customer information including house number and distance
+                        nearbyCustomers.forEach(function (customer) {
+                            var listItem = document.createElement('li');
+                            var distance = calculateDistance(
+                                currentLocation.lat, currentLocation.lng,
+                                customer.latitude, customer.longitude
+                            );
 
-    // Check if distance is undefined and handle it
-    var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
+                            // Check if distance is undefined and handle it
+                            var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
 
-    listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'N/A'}, Street: ${customer.street_name || 'N/A'}, ${distance.toFixed(2)}m)`;
+                            listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'N/A'}, Street: ${customer.street_name || 'N/A'}, ${distance.toFixed(2)}m)`;
 
-        document.getElementById('customer-list').appendChild(listItem);
-});
+                            document.getElementById('customer-list').appendChild(listItem);
+                        });
 
-            // Scroll to the customer list container
-            document.getElementById('customer-list-container').scrollIntoView({ behavior: 'smooth' });
-        } else {
-            alert('Please get your current location before showing the customer list.');
-        }
-}
- // Modify the function definition to include house number and distance
-function getNearbyCustomers(currentLocation, limit) {
-    var radius = 15000; // in meters
-    var nearbyCustomers = customers.filter(function (customer) {
-        var distance = calculateDistance(
-            currentLocation.lat, currentLocation.lng,
-            customer.latitude, customer.longitude
-        );
-        return distance <= radius;
-    });
+                        // Scroll to the customer list container
+                        document.getElementById('customer-list-container').scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        alert('Please get your current location before showing the customer list.');
+                    }
+                }
 
-    // Sort customers by distance and limit the result to the specified number
-    nearbyCustomers.sort(function (a, b) {
-        return calculateDistance(
-            currentLocation.lat, currentLocation.lng,
-            a.latitude, a.longitude
-        ) - calculateDistance(
-            currentLocation.lat, currentLocation.lng,
-            b.latitude, b.longitude
-        );
-    });
+                // Modify the function definition to include house number and distance
+                function getNearbyCustomers(currentLocation, limit) {
+                    var radius = 15000; // in meters
+                    var nearbyCustomers = customers.filter(function (customer) {
+                        var distance = calculateDistance(
+                            currentLocation.lat, currentLocation.lng,
+                            customer.latitude, customer.longitude
+                        );
+                        return distance <= radius;
+                    });
 
-    // Add house number and distance to each customer in the result
-    return nearbyCustomers.slice(0, limit).map(function (customer) {
-        var distance = calculateDistance(
-            currentLocation.lat, currentLocation.lng,
-            customer.latitude, customer.longitude
-        ).toFixed(2); // Round the distance to two decimal places
-        return {
-            ...customer,
-            distance: distance,
-        };
-    });
-}
+                    // Sort customers by distance and limit the result to the specified number
+                    nearbyCustomers.sort(function (a, b) {
+                        return calculateDistance(
+                            currentLocation.lat, currentLocation.lng,
+                            a.latitude, a.longitude
+                        ) - calculateDistance(
+                            currentLocation.lat, currentLocation.lng,
+                            b.latitude, b.longitude
+                        );
+                    });
 
+                    // Add house number and distance to each customer in the result
+                    return nearbyCustomers.slice(0, limit).map(function (customer) {
+                        var distance = calculateDistance(
+                            currentLocation.lat, currentLocation.lng,
+                            customer.latitude, customer.longitude
+                        ).toFixed(2); // Round the distance to two decimal places
+                        return {
+                            ...customer,
+                            distance: distance,
+                        };
+                    });
+                }
 
                 // Function to calculate distance between two points using Haversine formula
                 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -304,37 +295,37 @@ function getNearbyCustomers(currentLocation, limit) {
                 // Declare currentLocation globally
                 var currentLocation;
 
- // Function to get the current location and center the map
-        function getCurrentLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var currentLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
+                // Function to get the current location and center the map
+                function getCurrentLocation() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var currentLocation = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
 
-                    // Center the map to the current location
-                    map.setCenter(currentLocation);
+                            // Center the map to the current location
+                            map.setCenter(currentLocation);
 
-                    // Add a marker for the current location
-                    var currentLocationMarker = new google.maps.Marker({
-                        position: currentLocation,
-                        map: map,
-                        title: "Current Location",
-                    });
+                            // Add a marker for the current location
+                            var currentLocationMarker = new google.maps.Marker({
+                                position: currentLocation,
+                                map: map,
+                                title: "Current Location",
+                            });
 
-                    // Show the current location in the textbox
-                    document.getElementById('current-location-info').value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
-                }, function (error) {
-                    console.error("Error getting current location:", error);
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
+                            // Show the current location in the textbox
+                            document.getElementById('current-location-info').value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
+                        }, function (error) {
+                            console.error("Error getting current location:", error);
+                        });
+                    } else {
+                        alert("Geolocation is not supported by this browser.");
+                    }
+                }
 
-        document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
-        document.body.onload = initMap;
+                document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
+                document.body.onload = initMap;
 
                 // Function to get popup content for a customer
                 function getCustomerPopupContent(customer) {
@@ -346,11 +337,10 @@ function getNearbyCustomers(currentLocation, limit) {
                         <p>Meter Number: ${customer.meternumber}</p>
                         <p>Mobile Number: ${customer.mobilenumber}</p>
                         <p>House Number: ${customer.house_number}</p>
-						<p>Street Name: ${customer.street_name !== undefined ? customer.street_name : 'N/A'}</p>
+                        <p>Street Name: ${customer.street_name !== undefined ? customer.street_name : 'N/A'}</p>
                         <p>Zone Name: ${customer.zonename}</p>
                         <p>Route Name: ${customer.routename}</p>
                         <p>Resident Type: ${customer.resident_type}</p>
-						
                     </div>
                     `;
                 }
@@ -531,7 +521,7 @@ document.body.appendChild(madeWithLove);
         document.getElementById('customer-list').appendChild(listItem);
     });
 
-  
+    </script>
 	
 	<script>
     var map;
