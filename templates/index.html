@@ -284,8 +284,8 @@ nearbyCustomers.forEach(function (customer) {
     // Check if distance is undefined and handle it
     var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
 
-    listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number}, ${distanceText})`;
-    document.getElementById('customer-list').appendChild(listItem);
+    listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'N/A'}, Street: ${customer.street_name || 'N/A'}, ${distance}m)`;
+        document.getElementById('customer-list').appendChild(listItem);
 });
 
             // Scroll to the customer list container
