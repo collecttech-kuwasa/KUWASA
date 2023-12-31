@@ -363,7 +363,7 @@ function getCurrentLocation() {
         // Start watching the position
         watchId = navigator.geolocation.watchPosition(
             function (position) {
-                if (position.coords.accuracy <= 4) {
+                if (position.coords.accuracy <= 10) {
                     // Stop watching the position once the desired accuracy is achieved
                     navigator.geolocation.clearWatch(watchId);
 
