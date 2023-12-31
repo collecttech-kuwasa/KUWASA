@@ -595,18 +595,22 @@ document.body.appendChild(madeWithLove);
         listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'N/A'}, Street: ${customer.street_name || 'N/A'}, ${distance}m)`;
         document.getElementById('customer-list').appendChild(listItem);
     });
-	
-	var map;
 
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -34.397, lng: 150.644 }, // Set your default map center
-        zoom: 14, // Set your default zoom level
-		
-		
-    });
-	document.body.onload = initMap;
     </script>
+	
+	<script>
+    var map;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: -34.397, lng: 150.644 }, // Set your default map center
+            zoom: 14, // Set your default zoom level
+        });
+    }
+
+    document.body.onload = initMap;
+</script>
+
 
     <!-- Add buttons to trigger getting the current location, toggle customer names, and toggle map layer -->
     <div class="toggle-btn">
