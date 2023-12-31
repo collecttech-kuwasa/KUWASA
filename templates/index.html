@@ -361,7 +361,7 @@ function getCurrentLocation() {
     console.log("Getting current location...");
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-            currentLocation = {
+            var currentLocation = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
@@ -370,24 +370,22 @@ function getCurrentLocation() {
 
             // Remove the previous current location marker, if it exists
             if (currentLocationMarker) {
-                map.removeLayer(currentLocationMarker);
+                currentLocationMarker.setMap(null);
             }
 
-            // Add a marker for the current location with a different color
-            currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
-                icon: L.divIcon({
-                    className: 'custom-marker',
-                    html: '<div class="leaflet-div-icon"></div>',
-                    iconSize: [8, 8],
-                    iconAnchor: [4, 4],
-                }),
-            }).addTo(map);
+            // Add a marker for the current location
+            currentLocationMarker = new google.maps.Marker({
+                position: currentLocation,
+                map: map,
+                icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png' // Blue marker for current location
+            });
 
             // Get the recommended zoom level based on the desired feature size
             var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
 
             // Set the view to the new current location with the recommended zoom level
-            map.setView([currentLocation.lat, currentLocation.lng], 19); // Set the zoom level to 19
+            map.setCenter(currentLocation);
+            map.setZoom(19); // Set the zoom level to 19
 
             // Show customers around the new current location without names by default
             showCustomersAround(currentLocation, false);
@@ -398,6 +396,7 @@ function getCurrentLocation() {
         alert("Geolocation is not supported by this browser.");
     }
 }
+
 
                 // Function to get popup content for a customer
                 function getCustomerPopupContent(customer) {
