@@ -67,48 +67,11 @@
 	<!-- Add this new section for customer list -->
 <div id="customer-list-container">
         <h2 id="customer-list-heading" style="display: none;">Nearby Customers</h2>
-        <ul id="customer-list"></ul>
+        
     </div>
 	
     <ul id="customer-list"><!-- Populate the list with customer information including house number and distance -->
-        <script>
-            // Set the maximum number of customers to display
-            var maxCustomersToShow = 10; // Change this number to your desired limit
-
-     // Populate the list with customer information including house number and distance
-    nearbyCustomers.forEach(function (customer) {
-        var listItem = document.createElement('li');
-        var distance = calculateDistance(
-            currentLocation.lat, currentLocation.lng,
-            customer.latitude, customer.longitude
-        );
-
-        // Check if distance is undefined and handle it
-        var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
-
-         listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'N/A'}, Street: ${customer.street_name || 'N/A'}, ${distance}m)`;
-        document.getElementById('customer-list').appendChild(listItem);
-    });
-
-    // Get the count of nearby customers
-    var nearbyCustomersCount = nearbyCustomers.length;
-
-    // Get the reference to the "Nearby Customers" label
-    var nearbyCustomersLabel = document.getElementById('customer-list-heading');
-
-    // Debugging log statements
-    console.log("Nearby Customers:", nearbyCustomers);
-    console.log("Nearby Customers Count:", nearbyCustomersCount);
-
-    // Show or hide the label based on the count
-    if (nearbyCustomersCount > 0) {
-        nearbyCustomersLabel.style.display = 'block'; // or 'inline' or 'inline-block' depending on your layout
-        console.log("Setting label display style to 'block'");
-    } else {
-        nearbyCustomersLabel.style.display = 'none';
-        console.log("Setting label display style to 'none'");
-    }
-        </script></ul>
+    </ul>
 </div>
 
     <!-- Include Leaflet JS -->
