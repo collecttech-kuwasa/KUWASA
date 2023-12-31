@@ -352,8 +352,6 @@ function getNearbyCustomers(currentLocation, limit) {
 
                 // Declare currentLocation globally
                 var currentLocation;
-// Declare watchId globally
-var watchId;
 
 // Function to get the current location and zoom to it
 function getCurrentLocation() {
@@ -390,11 +388,9 @@ function getCurrentLocation() {
 
             // Show customers around the new current location without names by default
             showCustomersAround(currentLocation, false);
-        },  function (error) {
-                console.error("Error getting current location:", error);
-            },
-            { enableHighAccuracy: true } // Add enableHighAccuracy option here
-        );
+        }, function (error) {
+            console.error("Error getting current location:", error);
+        });
     } else {
         alert("Geolocation is not supported by this browser.");
     }
