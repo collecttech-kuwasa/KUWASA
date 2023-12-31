@@ -193,48 +193,18 @@ var removeRouteBtn;
                     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
                 }
 
-// Define separate instances for OpenStreetMap and Google satellite imagery
-var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
-});
-
-var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-    attribution: '© Google contributors',
-    maxZoom: 19,
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-});
+// Replace Leaflet tile layers with Google Maps
+var defaultLayer = new google.maps.MapTypeId.ROADMAP;
+var satelliteLayer = new google.maps.MapTypeId.SATELLITE;
 
 // Add the default layer to the map initially
-defaultLayer.addTo(map);
+map.setMapTypeId(defaultLayer);
 
-// Define separate instances for OpenStreetMap and Google satellite imagery
-var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
-});
-
-var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-    attribution: '© Google contributors',
-    maxZoom: 19,
-    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-});
-
-// Add the layers to a layer control
-var baseLayers = {
-    "OpenStreetMap": defaultLayer,
-    "Satellite": satelliteLayer
-};
-
-// Create a layer control and add it to the map
-L.control.layers(baseLayers).addTo(map);
-
-// Add the default layer to the map initially
-defaultLayer.addTo(map);
+// Add the layers to a layer control (Note: Google Maps doesn't have a built-in layer control like Leaflet)
+// You can use your own custom UI elements or integrate a third-party library for layer control.
 
 // Event listener for the new button to show the customer list
-    document.querySelector("#show-customer-list-btn").addEventListener("click", showCustomerList);
-
+document.querySelector("#show-customer-list-btn").addEventListener("click", showCustomerList);
 
 // Add an event listener for the toggle button
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
@@ -242,16 +212,15 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
 
     // Set the active layer based on the toggle state
     if (showSatellite) {
-        map.removeLayer(defaultLayer);
-        satelliteLayer.addTo(map);
+        map.setMapTypeId(satelliteLayer);
     } else {
-        map.removeLayer(satelliteLayer);
-        defaultLayer.addTo(map);
+        map.setMapTypeId(defaultLayer);
     }
 
     // Show customers around the current location with or without names based on the toggle state
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
 });
+
 
 // Function to show the list of customers
     function showCustomerList() {
