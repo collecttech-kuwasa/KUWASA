@@ -356,46 +356,37 @@ function getNearbyCustomers(currentLocation, limit) {
                 // Declare currentLocation globally
                 var currentLocation;
 
-// Function to get the current location and zoom to it
-function getCurrentLocation() {
-    console.log("Getting current location...");
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            var currentLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
+ // Function to get the current location and zoom to it
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var currentLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
 
-            console.log("Current Location:", currentLocation);
+                    // Center the map to the current location
+                    map.setCenter(currentLocation);
 
-            // Remove the previous current location marker, if it exists
-            if (currentLocationMarker) {
-                currentLocationMarker.setMap(null);
+                    // Add a marker for the current location
+                    var currentLocationMarker = new google.maps.Marker({
+                        position: currentLocation,
+                        map: map,
+                        title: "Current Location",
+                    });
+
+                    // Show the current location in the textbox
+                    document.getElementById('current-location-info').value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
+                }, function (error) {
+                    console.error("Error getting current location:", error);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
             }
+        }
 
-            // Add a marker for the current location
-            currentLocationMarker = new google.maps.Marker({
-                position: currentLocation,
-                map: map,
-                icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png' // Blue marker for current location
-            });
-
-            // Get the recommended zoom level based on the desired feature size
-            var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
-
-            // Set the view to the new current location with the recommended zoom level
-            map.setCenter(currentLocation);
-            map.setZoom(19); // Set the zoom level to 19
-
-            // Show customers around the new current location without names by default
-            showCustomersAround(currentLocation, false);
-        }, function (error) {
-            console.error("Error getting current location:", error);
-        });
-    } else {
-        alert("Geolocation is not supported by this browser.");
-    }
-}
+        // Add an event listener for the "Get My Location" button
+        document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
 
 
                 // Function to get popup content for a customer
