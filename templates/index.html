@@ -151,6 +151,9 @@ var defaultCenter = [-4.893941, 29.673386]; // Replace with your desired default
 
 map = L.map('map').setView(defaultCenter, defaultZoomLevel);
 
+ // Call updateCurrentLocation to set the initial current location marker
+    updateCurrentLocation();
+
                 // Default OpenStreetMap tile layer
                 var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors',
@@ -366,6 +369,50 @@ function getNearbyCustomers(currentLocation, limit) {
     });
 }
 
+// Function to update the current location marker
+function updateCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            currentLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            // Remove the previous current location marker, if it exists
+            if (currentLocationMarker) {
+                map.removeLayer(currentLocationMarker);
+            }
+
+            // Add a marker for the current location with a different color
+            currentLocationMarker = L.marker([currentLocation.lat, currentLocation.lng], {
+                icon: L.divIcon({
+                    className: 'custom-marker',
+                    html: '<div class="leaflet-div-icon"></div>',
+                    iconSize: [8, 8],
+                    iconAnchor: [4, 4],
+                }),
+            }).addTo(map);
+
+            // Update the view to the new current location
+            map.setView([currentLocation.lat, currentLocation.lng]);
+
+            // Show customers around the new current location without names by default
+            showCustomersAround(currentLocation, false);
+        }, function (error) {
+            console.error("Error getting current location:", error);
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+// Use watchPosition to continuously update the current location marker
+navigator.geolocation.watchPosition(function (position) {
+    // Update the current location marker when the user's position changes
+    updateCurrentLocation();
+}, function (error) {
+    console.error("Error watching position:", error);
+});
 
                 // Function to calculate distance between two points using Haversine formula
                 function calculateDistance(lat1, lon1, lat2, lon2) {
