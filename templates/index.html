@@ -39,7 +39,7 @@
     </style>
 </head>
 
-<body>
+<body onload="initMap()">
     <h1>KUWASA Customers</h1>
 
     <!-- Search Container -->
@@ -79,6 +79,9 @@
 
     <!-- Include Leaflet Routing Machine -->
    <script src="https://cdn.jsdelivr.net/npm/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+   
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCciMOOFmp5RiF3UGusf9QOZlP-FCMFOXM&libraries=places"></script>
+
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 
@@ -396,6 +399,14 @@ function getCurrentLocation() {
     }
 }
 
+
+var map;
+
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 }, // Set your default map center
+        zoom: 14, // Set your default zoom level
+    });
 
                 // Function to get popup content for a customer
                 function getCustomerPopupContent(customer) {
