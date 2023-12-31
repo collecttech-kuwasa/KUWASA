@@ -393,8 +393,7 @@ function getNearbyCustomers(currentLocation, limit) {
                 // Declare currentLocation globally
                 var currentLocation;
 
-
-// Function to get the current location and emit the update to the server
+// Function to get the current location and zoom to it
 function getCurrentLocation() {
     console.log("Getting current location...");
     if (navigator.geolocation) {
@@ -421,9 +420,6 @@ function getCurrentLocation() {
                 }),
             }).addTo(map);
 
-            // Emit the real-time location update to the server
-            socket.emit('update_location', {'account_number': '123', 'latitude': currentLocation.lat, 'longitude': currentLocation.lng});
-
             // Get the recommended zoom level based on the desired feature size
             var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
 
@@ -439,7 +435,6 @@ function getCurrentLocation() {
         alert("Geolocation is not supported by this browser.");
     }
 }
-
 
 
                 // Function to get popup content for a customer

@@ -37,26 +37,6 @@
 
     <!-- Include Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-	
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
-
-<script>
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-    socket.on('location_update', function (data) {
-        // Handle real-time location update
-        var latitude = data.latitude;
-        var longitude = data.longitude;
-
-        // Make an additional request to the server to fetch data based on location
-        fetch(`/get_additional_info?latitude=${latitude}&longitude=${longitude}`)
-            .then(response => response.json())
-            .then(data => {
-                // Handle the additional information from the server (e.g., update UI)
-                console.log('Additional Info:', data);
-            });
-    });
-</script>
 
     <script>
         var latitude = {{ customer[9] }};
