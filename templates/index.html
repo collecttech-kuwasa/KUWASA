@@ -193,15 +193,11 @@ var removeRouteBtn;
                     currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
                 }
 
-// Replace Leaflet tile layers with Google Maps
-var defaultLayer = new google.maps.MapTypeId.ROADMAP;
-var satelliteLayer = new google.maps.MapTypeId.SATELLITE;
-
-// Add the default layer to the map initially
-map.setMapTypeId(defaultLayer);
-
-// Add the layers to a layer control (Note: Google Maps doesn't have a built-in layer control like Leaflet)
-// You can use your own custom UI elements or integrate a third-party library for layer control.
+// Initialize Google Maps
+var map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: -4.893941, lng: 29.673386 }, // Set your default map center
+    zoom: 14, // Set your default zoom level
+});
 
 // Event listener for the new button to show the customer list
 document.querySelector("#show-customer-list-btn").addEventListener("click", showCustomerList);
@@ -212,15 +208,14 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
 
     // Set the active layer based on the toggle state
     if (showSatellite) {
-        map.setMapTypeId(satelliteLayer);
+        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
     } else {
-        map.setMapTypeId(defaultLayer);
+        map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
     }
 
     // Show customers around the current location with or without names based on the toggle state
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
 });
-
 
 // Function to show the list of customers
     function showCustomerList() {
