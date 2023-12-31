@@ -78,8 +78,7 @@
    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCciMOOFmp5RiF3UGusf9QOZlP-FCMFOXM&libraries=places"></script>
 
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-
+  
     <!-- Access customer data directly from Flask -->
     <script>
         var customers = {{ customers_json | safe }};
@@ -351,7 +350,7 @@ function getNearbyCustomers(currentLocation, limit) {
                 // Declare currentLocation globally
                 var currentLocation;
 
- // Function to get the current location and zoom to it
+ // Function to get the current location and center the map
         function getCurrentLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position) {
@@ -380,9 +379,8 @@ function getNearbyCustomers(currentLocation, limit) {
             }
         }
 
-        // Add an event listener for the "Get My Location" button
         document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
-
+        document.body.onload = initMap;
 
                 // Function to get popup content for a customer
                 function getCustomerPopupContent(customer) {
