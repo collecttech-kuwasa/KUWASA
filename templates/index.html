@@ -69,7 +69,8 @@
     <ul id="customer-list"><!-- Populate the list with customer information including house number and distance -->
     </ul>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCciMOOFmp5RiF3UGusf9QOZlP-FCMFOXM&libraries=places"></script>
+
 
     <!-- Access customer data directly from Flask -->
     <script>
@@ -345,64 +346,62 @@
                     `;
                 }
 
-                // Function to search for a customer by name, account number, control number, or phone number
-                function searchForCustomer() {
-                    var searchInput = document.querySelector("#customer-search-input");
-                    var searchTerm = searchInput.value.toLowerCase();
+               // Function to search for a customer by name, account number, control number, or phone number
+function searchForCustomer() {
+    var searchInput = document.querySelector("#customer-search-input");
+    var searchTerm = searchInput.value.toLowerCase();
 
-                    // Filter customers based on the search term
-                    var searchResults = customers.filter(function (customer) {
-                        return (
-                            customer.customername.toLowerCase().includes(searchTerm) ||
-                            customer.accountnumber.toLowerCase().includes(searchTerm) ||
-                            customer.controlnumber.toLowerCase().includes(searchTerm) ||
-                            customer.mobilenumber.toLowerCase().includes(searchTerm)
-                        );
-                    });
+    // Filter customers based on the search term
+    var searchResults = customers.filter(function (customer) {
+        return (
+            customer.customername.toLowerCase().includes(searchTerm) ||
+            customer.accountnumber.toLowerCase().includes(searchTerm) ||
+            customer.controlnumber.toLowerCase().includes(searchTerm) ||
+            customer.mobilenumber.toLowerCase().includes(searchTerm)
+        );
+    });
 
-                    // Clear existing markers
-                    markers.forEach(function (marker) {
-                        map.removeLayer(marker);
-                    });
+    // Clear existing markers
+    markers.forEach(function (marker) {
+        map.removeLayer(marker);
+    });
 
-                    // Add markers for search results
-                    markers = searchResults.map(function (customer) {
-                        var marker = L.marker([customer.latitude, customer.longitude])
-                            .bindPopup(getCustomerPopupContent(customer)) // Bind popup content
-                            .on('click', function (e) {
-                                // Handle marker click event here
-                                var clickedMarker = e.target;
-                                var clickedCoords = clickedMarker.getLatLng();
-                                selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
-                            });
+    // Add markers for search results
+    markers = searchResults.map(function (customer) {
+        var marker = L.marker([customer.latitude, customer.longitude])
+            .bindPopup(getCustomerPopupContent(customer)) // Bind popup content
+            .on('click', function (e) {
+                // Handle marker click event here
+                var clickedMarker = e.target;
+                var clickedCoords = clickedMarker.getLatLng();
+                selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
+            });
 
-                        // Use tooltip instead of popup if showNames is true
-                        if (showNames) {
-                            marker.bindTooltip(customer.customername, {
-                                permanent: true,
-                                direction: 'auto'
-                            });
-                        }
+        // Use tooltip instead of popup if showNames is true
+        if (showNames) {
+            marker.bindTooltip(customer.customername, {
+                permanent: true,
+                direction: 'auto'
+            });
+        }
 
-                        // Add marker to the map
-                        marker.addTo(map);
+        // Add marker to the map
+        marker.addTo(map);
 
-                        return marker;
-                    });
+        return marker;
+    });
 
-                    // Show selected customer in the textbox
-                    if (searchResults.length > 0) {
-                        // Update the selectedCustomerInfo with the coordinates of the selected customer
-                        selectedCustomerInfo.value = `Latitude: ${searchResults[0].latitude.toFixed(6)}, Longitude: ${searchResults[0].longitude.toFixed(6)}`;
+    // Show selected customer in the textbox
+    if (searchResults.length > 0) {
+        // Update the selectedCustomerInfo with the coordinates of the selected customer
+        selectedCustomerInfo.value = `Latitude: ${searchResults[0].latitude.toFixed(6)}, Longitude: ${searchResults[0].longitude.toFixed(6)}`;
 
-                        // Zoom to the selected customer
-                        map.flyTo([searchResults[0].latitude, searchResults[0].longitude], 16); // Adjust the zoom level as needed
-                    } else {
-                        selectedCustomerInfo.value = "No customer found"; // Update the message if no customer is found
-                    }
-                }
-var routingControl;
-var removeRouteBtn;
+        // Zoom to the selected customer
+        map.flyTo([searchResults[0].latitude, searchResults[0].longitude], 16); // Adjust the zoom level as needed
+    } else {
+        selectedCustomerInfo.value = "No customer found"; // Update the message if no customer is found
+    }
+}
 
 // Function to show directions and distance
 function showDirections() {
@@ -419,56 +418,50 @@ function showDirections() {
         var currentCoords = currentLocationInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
         var customerCoords = selectedCustomerInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
 
-        // Create a new routing control using leaflet-routing-machine API
         // Create a new routing control using leaflet-routing-machine
-var waypoints = [
-    L.latLng(currentCoords[0], currentCoords[1]),
-    L.latLng(customerCoords[0], customerCoords[1])
-];
+        var waypoints = [
+            L.latLng(currentCoords[0], currentCoords[1]),
+            L.latLng(customerCoords[0], customerCoords[1])
+        ];
 
-try {
-    routingControl = L.Routing.control({
-        waypoints: waypoints,
-        routeWhileDragging: true
-    });
+        try {
+            routingControl = L.Routing.control({
+                waypoints: waypoints,
+                routeWhileDragging: true
+            });
 
-    // Add the routing control to the map
-    map.addControl(routingControl);
+            // Add the routing control to the map
+            map.addControl(routingControl);
 
-    // Add a button to remove the route
-    removeRouteBtn = document.createElement('button');
-    removeRouteBtn.textContent = 'Remove Route';
-    removeRouteBtn.addEventListener('click', function () {
-        // Remove the routing control from the map
-        map.removeControl(routingControl);
-        // Remove the button from the map
-        map.removeControl(removeRouteBtn);
-    });
-    map.addControl(removeRouteBtn);
+            // Add a button to remove the route
+            removeRouteBtn = document.createElement('button');
+            removeRouteBtn.textContent = 'Remove Route';
+            removeRouteBtn.addEventListener('click', function () {
+                // Remove the routing control from the map
+                map.removeControl(routingControl);
+                // Remove the button from the map
+                map.removeControl(removeRouteBtn);
+            });
+            map.addControl(removeRouteBtn);
 
-} catch (error) {
-    console.error("Error creating routing control:", error.message, error.stack);
-}
-
-
+        } catch (error) {
+            console.error("Error creating routing control:", error.message, error.stack);
+        }
     } else {
         alert('Please select a customer and get your current location before showing directions.');
     }
 }
 
+// Add a button to show directions
+var showDirectionsBtn = document.createElement('button');
+showDirectionsBtn.textContent = 'Show Directions';
+showDirectionsBtn.addEventListener('click', showDirections);
+document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
+// Event listener for the "Get My Location" button
+document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
 
-                // Add a button to show directions
-                var showDirectionsBtn = document.createElement('button');
-                showDirectionsBtn.textContent = 'Show Directions';
-                showDirectionsBtn.addEventListener('click', showDirections);
-                document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
-
-                // Event listener for the "Get My Location" button
-        document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
-
-
-      // Event listener for the map minimize event
+// Event listener for the map minimize event
 google.maps.event.addListener(map, 'minimize', function (e) {
     // Store the current zoom level in localStorage when the map is minimized
     localStorage.setItem('userZoomLevel', map.getZoom());
@@ -489,62 +482,5 @@ document.querySelector("#toggle-names-btn").addEventListener("click", function (
     showCustomersAround(map.getCenter(), showNames);
 });
 
-// Add a button to toggle between OpenStreetMap and satellite imagery
-document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
-    showSatellite = !showSatellite;
-    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
-});
-
 // Add an event listener for the search button
 document.querySelector("#search-btn").addEventListener("click", searchForCustomer);
-
-			
-			// Made with ❤️ by CollectTech Innovations
-var madeWithLove = document.createElement('p');
-madeWithLove.innerHTML = 'Made with <span style="color: red; font-size: 12px;">❤️</span> by CollectTech Innovations';
-madeWithLove.style.position = 'fixed';
-madeWithLove.style.bottom = '0';
-madeWithLove.style.right = '0';
-madeWithLove.style.margin = '4px'; // Add margin for better visibility
-document.body.appendChild(madeWithLove);
-
-        };
-		
-		 // Populate the list with customer information including house number and distance
-    nearbyCustomers.forEach(function (customer) {
-        var listItem = document.createElement('li');
-        var distance = calculateDistance(
-            currentLocation.lat, currentLocation.lng,
-            customer.latitude, customer.longitude
-        ).toFixed(2); // Round the distance to two decimal places
-        listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'N/A'}, Street: ${customer.street_name || 'N/A'}, ${distance}m)`;
-        document.getElementById('customer-list').appendChild(listItem);
-    });
-
-    </script>
-	
-	<script>
-    var map;
-
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: -34.397, lng: 150.644 }, // Set your default map center
-            zoom: 14, // Set your default zoom level
-        });
-    }
-
-    document.body.onload = initMap;
-</script>
-
-
-    <!-- Add buttons to trigger getting the current location, toggle customer names, and toggle map layer -->
-    <div class="toggle-btn">
-        <button id="get-location-btn">Get My Location</button>
-        <label for="toggle-names-btn">Show Names</label>
-        <input type="checkbox" id="toggle-names-btn">
-        <button id="toggle-layer-btn">Toggle Layer</button>
-    </div>
-
-</body>
-
-</html>
