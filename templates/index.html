@@ -478,38 +478,36 @@ try {
         document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
 
 
-        // Event listener for the map minimize event
-        map.on('minimize', function (e) {
-            // Store the current zoom level in localStorage when the map is minimized
-            localStorage.setItem('userZoomLevel', map.getZoom());
-        });
+      // Event listener for the map minimize event
+google.maps.event.addListener(map, 'minimize', function (e) {
+    // Store the current zoom level in localStorage when the map is minimized
+    localStorage.setItem('userZoomLevel', map.getZoom());
+});
 
-        // Event listener for the map restore event
-        map.on('restore', function (e) {
-            // Restore the zoom level when the map is restored
-            var userZoomLevel = localStorage.getItem('userZoomLevel');
-            if (userZoomLevel) {
-                map.setZoom(parseInt(userZoomLevel));
-            }
-        });
-		
-                // Add a button to toggle customer names display
-                document.querySelector("#toggle-names-btn").addEventListener("click", function () {
-                    var showNames = document.querySelector("#toggle-names-btn").checked;
-                    showCustomersAround(map.getCenter(), showNames);
-                });
+// Event listener for the map restore event
+google.maps.event.addListener(map, 'restore', function (e) {
+    // Restore the zoom level when the map is restored
+    var userZoomLevel = localStorage.getItem('userZoomLevel');
+    if (userZoomLevel) {
+        map.setZoom(parseInt(userZoomLevel));
+    }
+});
 
-                // Add a button to toggle between OpenStreetMap and satellite imagery
-                document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
-                    showSatellite = !showSatellite;
-                    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
-                });
+// Add a button to toggle customer names display
+document.querySelector("#toggle-names-btn").addEventListener("click", function () {
+    var showNames = document.querySelector("#toggle-names-btn").checked;
+    showCustomersAround(map.getCenter(), showNames);
+});
 
-                // Add an event listener for the search button
-                document.querySelector("#search-btn").addEventListener("click", searchForCustomer);
-            } else {
-                console.error("No customer data available.");
-            }
+// Add a button to toggle between OpenStreetMap and satellite imagery
+document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
+    showSatellite = !showSatellite;
+    showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
+});
+
+// Add an event listener for the search button
+document.querySelector("#search-btn").addEventListener("click", searchForCustomer);
+
 			
 			// Made with ❤️ by CollectTech Innovations
 var madeWithLove = document.createElement('p');
