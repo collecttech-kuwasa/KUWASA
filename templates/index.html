@@ -35,10 +35,6 @@
         font-size: 10px;
         color: red;
         z-index: 1000;
-		
-		<!-- Include Socket.IO -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-
     }
     </style>
 </head>
@@ -643,18 +639,6 @@ document.body.appendChild(madeWithLove);
         <input type="checkbox" id="toggle-names-btn">
         <button id="toggle-layer-btn">Toggle Layer</button>
     </div>
-	
-	<script>
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/location');
-
-    socket.on('location_update', function (data) {
-        // Handle real-time location update
-        var latitude = data.latitude;
-        var longitude = data.longitude;
-        // Update the map or do something with the location data
-    });
-</script>
-
 
 </body>
 

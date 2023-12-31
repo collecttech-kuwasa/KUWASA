@@ -4,12 +4,9 @@ from flask import Flask, render_template, jsonify
 import psycopg2
 import json
 import ssl
-from flask_socketio import SocketIO
 from werkzeug.serving import run_simple
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*")  # Enable CORS for all origins
-
 
 # Replace these values with your PostgreSQL connection details
 DB_HOST = "localhost"
@@ -82,11 +79,6 @@ def customer_details(account_number):
     return render_template('customer_details.html', customer=customer)
 
 if __name__ == '__main__':
-    # Run the app with Socket.IO support
-    socketio.run(app, host='0.0.0.0', port=8000, ssl_context=context, use_reloader=True, use_debugger=True)
+    # Run the app with SSL support using werkzeug server
+    run_simple('0.0.0.0', 8000, app, ssl_context=context, use_reloader=True, use_debugger=True)
 
-@app.route('/update_location', methods=['POST'])
-def update_location():
-    data = request.json  # Assuming the location data is sent as JSON
-    socketio.emit('location_update', data, namespace='/location')
-    return jsonify({'success': True})
