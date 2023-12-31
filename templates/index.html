@@ -626,7 +626,7 @@ document.body.appendChild(madeWithLove);
             currentLocation.lat, currentLocation.lng,
             customer.latitude, customer.longitude
         ).toFixed(2); // Round the distance to two decimal places
-        listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number}, ${distance}m)`;
+        listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'N/A'}, Street: ${customer.street_name || 'N/A'}, ${distance}m)`;
         document.getElementById('customer-list').appendChild(listItem);
     });
 	
