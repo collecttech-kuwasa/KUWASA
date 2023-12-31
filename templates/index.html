@@ -269,7 +269,7 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
 // Function to show the list of customers
     function showCustomerList() {
         if (currentLocation) {
-            var nearbyCustomers = getNearbyCustomers(currentLocation, 10); // Get the nearest 10 customers
+            var nearbyCustomers = getNearbyCustomers(currentLocation, 20); // Get the nearest 20 customers
             var customerListContainer = document.getElementById('customer-list');
             customerListContainer.innerHTML = ''; // Clear existing list
 
