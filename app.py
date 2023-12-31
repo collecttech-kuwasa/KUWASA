@@ -4,6 +4,9 @@ from flask import Flask, render_template, jsonify
 import psycopg2
 import json
 import ssl
+import sys
+print("Python Version:", sys.version)
+
 from werkzeug.serving import run_simple
 
 app = Flask(__name__)
