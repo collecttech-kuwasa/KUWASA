@@ -104,25 +104,15 @@ var removeRouteBtn;
             var userZoomLevel = localStorage.getItem('userZoomLevel');
 
             // Check if customers are available
-            if (customers.length > 0) {
-   // Set a default zoom level and center the map
-var defaultZoomLevel = 14;
-var defaultCenter = [-4.893941, 29.673386]; // Replace with your desired default center
+          if (customers.length > 0) {
+    // Set a default zoom level and center the map
+    var defaultZoomLevel = 14;
+    var defaultCenter = { lat: -4.893941, lng: 29.673386 }; // Replace with your desired default center
 
-map = L.map('map').setView(defaultCenter, defaultZoomLevel);
-
-                // Default OpenStreetMap tile layer
-                var defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors',
-                    maxZoom: 19 // Set the maximum zoom level to 19
-                }).addTo(map);
-
-                // Google satellite imagery tile layer
-                var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                    attribution: '© Google contributors',
-                    maxZoom: 19, // Set the maximum zoom level to 19
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                });
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: defaultCenter,
+        zoom: defaultZoomLevel,
+    });
 
                 function calculateRecommendedZoomLevel(desiredFeatureSize) {
                     var initialScale = 1;
