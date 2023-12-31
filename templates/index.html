@@ -35,6 +35,10 @@
         font-size: 10px;
         color: red;
         z-index: 1000;
+		
+		<!-- Include Socket.IO -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
     }
     </style>
 </head>
@@ -389,7 +393,8 @@ function getNearbyCustomers(currentLocation, limit) {
                 // Declare currentLocation globally
                 var currentLocation;
 
-// Function to get the current location and zoom to it
+
+// Function to get the current location and emit the update to the server
 function getCurrentLocation() {
     console.log("Getting current location...");
     if (navigator.geolocation) {
@@ -416,6 +421,9 @@ function getCurrentLocation() {
                 }),
             }).addTo(map);
 
+            // Emit the real-time location update to the server
+            socket.emit('update_location', {'account_number': '123', 'latitude': currentLocation.lat, 'longitude': currentLocation.lng});
+
             // Get the recommended zoom level based on the desired feature size
             var recommendedZoomLevel = calculateRecommendedZoomLevel(180); // Adjust desired feature size as needed
 
@@ -431,6 +439,7 @@ function getCurrentLocation() {
         alert("Geolocation is not supported by this browser.");
     }
 }
+
 
 
                 // Function to get popup content for a customer
@@ -639,6 +648,18 @@ document.body.appendChild(madeWithLove);
         <input type="checkbox" id="toggle-names-btn">
         <button id="toggle-layer-btn">Toggle Layer</button>
     </div>
+	
+	<script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/location');
+
+    socket.on('location_update', function (data) {
+        // Handle real-time location update
+        var latitude = data.latitude;
+        var longitude = data.longitude;
+        // Update the map or do something with the location data
+    });
+</script>
+
 
 </body>
 

@@ -5,8 +5,13 @@ import psycopg2
 import json
 import ssl
 from werkzeug.serving import run_simple
+# New import for managing SocketIO events
+from flask_socketio import SocketIO, emit
 
+
+# Initialize Flask app and SocketIO
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 # Replace these values with your PostgreSQL connection details
 DB_HOST = "localhost"
@@ -77,8 +82,52 @@ def customer_details(account_number):
     connection.close()
 
     return render_template('customer_details.html', customer=customer)
+	
+	# New endpoint to handle location updates
+@socketio.on('update_location')
+def handle_location_update(data):
+    account_number = data['account_number']
+    latitude = data['latitude']
+    longitude = data['longitude']
+
+    # Save the location update to the PostgreSQL database
+    connection = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO core.customer_location (account_number, latitude, longitude)
+        VALUES (%s, %s, %s)
+        ON CONFLICT (account_number) DO UPDATE 
+        SET latitude = %s, longitude = %s;
+    """, (account_number, latitude, longitude, latitude, longitude))
+
+    connection.commit()
+    connection.close()
+
+    # Emit the real-time update to all connected clients
+    emit('location_update', {'account_number': account_number, 'latitude': latitude, 'longitude': longitude}, broadcast=True)
+
 
 if __name__ == '__main__':
-    # Run the app with SSL support using werkzeug server
-    run_simple('0.0.0.0', 8000, app, ssl_context=context, use_reloader=True, use_debugger=True)
+    # Run the app with Socket.IO support
+    socketio.run(app, host='0.0.0.0', port=8000, ssl_context=context, use_reloader=True, use_debugger=True)
 
+@app.route('/get_additional_info', methods=['GET'])
+def get_additional_info():
+    latitude = request.args.get('latitude')
+    longitude = request.args.get('longitude')
+
+    # Fetch additional information from the PostgreSQL database
+    connection = psycopg2.connect(host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASSWORD)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT * FROM core.customer_location
+        WHERE latitude = %s AND longitude = %s;
+    """, (latitude, longitude))
+
+    additional_info = cursor.fetchone()
+
+    connection.close()
+
+    return jsonify({'additional_info': additional_info})
