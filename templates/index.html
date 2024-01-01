@@ -551,8 +551,20 @@ try {
                 showDirectionsBtn.addEventListener('click', showDirections);
                 document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
-                // Event listener for the "Get My Location" button
-        document.querySelector("#get-location-btn").addEventListener("click", getCurrentLocation);
+                // Add an event listener for the "Get My Location" button
+    document.querySelector("#get-location-btn").addEventListener("click", function () {
+        // Check if real-time location tracking is enabled
+        var realTimeTrackingEnabled = document.querySelector("#real-time-location-checkbox").checked;
+
+        // Trigger real-time location tracking if enabled
+        if (realTimeTrackingEnabled) {
+            // Call the function to get the current location continuously
+            setInterval(getCurrentLocation, 5000); // Update every 5 seconds (adjust as needed)
+        } else {
+            // Call the function to get the current location once
+            getCurrentLocation();
+        }
+    });
 
 
         // Event listener for the map minimize event
@@ -614,6 +626,8 @@ document.body.appendChild(madeWithLove);
 
     <!-- Add buttons to trigger getting the current location, toggle customer names, and toggle map layer -->
     <div class="toggle-btn">
+	<label for="real-time-location-checkbox">Real-time Location Tracking</label>
+    <input type="checkbox" id="real-time-location-checkbox">
         <button id="get-location-btn">Get My Location</button>
         <label for="toggle-names-btn">Show Names</label>
         <input type="checkbox" id="toggle-names-btn">
