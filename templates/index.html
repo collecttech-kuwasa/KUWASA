@@ -536,40 +536,40 @@ function showDirections() {
 
         // Create a new routing control using leaflet-routing-machine API
         // Create a new routing control using leaflet-routing-machine
-var waypoints = [
-    L.latLng(currentCoords[0], currentCoords[1]),
-    L.latLng(customerCoords[0], customerCoords[1])
-];
+        var waypoints = [
+            L.latLng(currentCoords[0], currentCoords[1]),
+            L.latLng(customerCoords[0], customerCoords[1])
+        ];
 
-try {
-    routingControl = L.Routing.control({
-        waypoints: waypoints,
-        routeWhileDragging: true
-    });
+        try {
+            routingControl = L.Routing.control({
+                waypoints: waypoints,
+                routeWhileDragging: true
+            });
 
-    // Add the routing control to the map
-    map.addControl(routingControl);
+            // Add the routing control to the map
+            map.addControl(routingControl);
 
-    // Add a button to remove the route
-    removeRouteBtn = document.createElement('button');
-    removeRouteBtn.textContent = 'Remove Route';
-    removeRouteBtn.addEventListener('click', function () {
-        // Remove the routing control from the map
-        map.removeControl(routingControl);
-        // Remove the button from the map
-        map.removeControl(removeRouteBtn);
-    });
-    map.addControl(removeRouteBtn);
+            // Add a button to remove the route
+            removeRouteBtn = document.createElement('button');
+            removeRouteBtn.textContent = 'Remove Route';
+            removeRouteBtn.addEventListener('click', function () {
+                // Remove the routing control from the map
+                map.removeControl(routingControl);
+                // Remove the button from the map
+                map.removeControl(removeRouteBtn);
+            });
+            map.addControl(removeRouteBtn);
 
-} catch (error) {
-    console.error("Error creating routing control:", error.message, error.stack);
-}
-
+        } catch (error) {
+            console.error("Error creating routing control:", error.message, error.stack);
+        }
 
     } else {
         alert('Please select a customer and get your current location before showing directions.');
     }
 }
+
 
 
 
