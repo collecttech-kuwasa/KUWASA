@@ -551,10 +551,10 @@ try {
                 showDirectionsBtn.addEventListener('click', showDirections);
                 document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
-               var realTimeTrackingEnabled = false;
+              var realTimeTrackingEnabled = false;
+    var locationUpdateInterval;
 
-   
-     // Add an event listener for the "Get My Location" button
+    // Add an event listener for the "Get My Location" button
     document.querySelector("#get-location-btn").addEventListener("click", function () {
         // Check if real-time location tracking is enabled
         realTimeTrackingEnabled = document.querySelector("#real-time-location-checkbox").checked;
