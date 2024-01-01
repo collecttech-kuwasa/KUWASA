@@ -82,6 +82,11 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 
+<!-- Add this line for authorized users -->
+    <script>
+        var authorizedUsers = ["user1", "user2", "user3"]; // Add your authorized usernames here
+    </script>
+	
     <!-- Access customer data directly from Flask -->
     <script>
         var customers = {{ customers_json | safe }};
@@ -95,6 +100,20 @@
 var removeRouteBtn;
 
         document.addEventListener('DOMContentLoaded', function () {
+		
+		var realTimeTrackingEnabled = false;
+    var locationUpdateInterval;
+    var currentUser;
+
+    // Prompt for username
+    do {
+        currentUser = prompt("Enter your username:");
+    } while (!currentUser || !authorizedUsers.includes(currentUser));
+
+    // Display welcome message
+    alert("Welcome, " + currentUser + "!");
+		
+	
             var map;
             var currentLocationMarker;
             var markers = [];
