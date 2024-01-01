@@ -551,12 +551,13 @@ try {
                 showDirectionsBtn.addEventListener('click', showDirections);
                 document.querySelector('.toggle-btn').appendChild(showDirectionsBtn);
 
-                var locationUpdateInterval;
+               var realTimeTrackingEnabled = false;
 
-    // Add an event listener for the "Get My Location" button
+   
+     // Add an event listener for the "Get My Location" button
     document.querySelector("#get-location-btn").addEventListener("click", function () {
         // Check if real-time location tracking is enabled
-        var realTimeTrackingEnabled = document.querySelector("#real-time-location-checkbox").checked;
+        realTimeTrackingEnabled = document.querySelector("#real-time-location-checkbox").checked;
 
         // Clear the existing interval if it exists
         clearInterval(locationUpdateInterval);
@@ -568,6 +569,13 @@ try {
         } else {
             // Call the function to get the current location once
             getCurrentLocation();
+        }
+    });
+
+    // Add an event listener for the checkbox to clear the interval when unchecked
+    document.querySelector("#real-time-location-checkbox").addEventListener("change", function () {
+        if (!this.checked) {
+            clearInterval(locationUpdateInterval);
         }
     });
 
