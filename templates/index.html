@@ -187,8 +187,8 @@ map = L.map('map').setView(defaultCenter, defaultZoomLevel);
                     var currentLayer = showSatellite ? satelliteLayer : defaultLayer;
                     map.addLayer(currentLayer);
 
-                    // Filter customers within a certain radius (e.g., 15000 meters)
-                    var radius = 15000; // in meters
+                    // Filter customers within a certain radius (e.g., 2000 meters)
+                    var radius = 2000; // in meters
                     var nearbyCustomers = customers.filter(function (customer) {
                         var distance = calculateDistance(
                             currentLocation.lat, currentLocation.lng,
