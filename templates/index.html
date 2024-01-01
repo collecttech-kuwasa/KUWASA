@@ -520,6 +520,7 @@ var routingControl;
 var removeRouteBtn;
 
 // Function to show directions and distance
+// Function to show directions and distance
 function showDirections() {
     if (currentLocationInfo.value && selectedCustomerInfo.value) {
         // Check if there's an existing routing control
@@ -535,7 +536,6 @@ function showDirections() {
         var customerCoords = selectedCustomerInfo.value.split(',').map(coord => parseFloat(coord.split(':')[1]));
 
         // Create a new routing control using leaflet-routing-machine API
-        // Create a new routing control using leaflet-routing-machine
         var waypoints = [
             L.latLng(currentCoords[0], currentCoords[1]),
             L.latLng(customerCoords[0], customerCoords[1])
@@ -544,7 +544,21 @@ function showDirections() {
         try {
             routingControl = L.Routing.control({
                 waypoints: waypoints,
-                routeWhileDragging: true
+                routeWhileDragging: true,
+                show: false, // Hide the default route control
+                createMarker: function (i, waypoint, n) {
+                    // Create custom markers for start, via, and end waypoints
+                    var marker = L.marker(waypoint.latLng);
+                    if (i === 0) {
+                        marker.bindPopup("Start");
+                    } else if (i === n - 1) {
+                        marker.bindPopup("Destination");
+                    }
+                    return marker;
+                },
+                lineOptions: {
+                    styles: [{ color: '#06f', opacity: 0.8, weight: 5 }]
+                },
             });
 
             // Add the routing control to the map
@@ -561,13 +575,40 @@ function showDirections() {
             });
             map.addControl(removeRouteBtn);
 
+            // Add event listeners for route events
+            routingControl.on('routeselected', function (e) {
+                var instructions = e.route.instructions;
+                var currentInstructionIndex = 0;
+
+                // Speak the first instruction
+                speakInstruction(instructions[currentInstructionIndex]);
+
+                // Listen for changes in route progress
+                routingControl.on('routeprogress', function (e) {
+                    var nextInstructionIndex = e.step_index + 1;
+
+                    // Speak the next instruction if it's a new one
+                    if (nextInstructionIndex !== currentInstructionIndex) {
+                        speakInstruction(instructions[nextInstructionIndex]);
+                        currentInstructionIndex = nextInstructionIndex;
+                    }
+                });
+            });
+
         } catch (error) {
             console.error("Error creating routing control:", error.message, error.stack);
         }
-
     } else {
         alert('Please select a customer and get your current location before showing directions.');
     }
+}
+
+// Function to speak the given instruction
+function speakInstruction(instruction) {
+    // Use the Web Speech API to speak the instruction
+    var speechSynthesis = window.speechSynthesis;
+    var utterance = new SpeechSynthesisUtterance(instruction.text);
+    speechSynthesis.speak(utterance);
 }
 
 
