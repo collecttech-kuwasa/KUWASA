@@ -583,7 +583,7 @@ try {
         // Clear or set the interval based on the checkbox state
         if (realTimeTrackingEnabled) {
             // Call the function to get the current location continuously
-            locationUpdateInterval = setInterval(getCurrentLocation, 5000); // Update every 5 seconds (adjust as needed)
+            locationUpdateInterval = setInterval(getCurrentLocation, 1000); // Update every 5 seconds (adjust as needed)
         } else {
             // Clear the existing interval if it exists
             clearInterval(locationUpdateInterval);
