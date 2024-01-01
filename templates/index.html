@@ -275,9 +275,11 @@ defaultLayer.addTo(map);
 
 // Modify the event listener for the "Show Nearby Customers" button
 document.querySelector("#show-customer-list-btn").addEventListener("click", function () {
-    var showAll = document.querySelector("#show-all-checkbox").checked;
+    // Assuming you want to show nearby customers without checking any checkbox
+    var showAll = false;
     showCustomersOnMap(showAll);
 });
+
 
 // Add an event listener for the toggle button
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
