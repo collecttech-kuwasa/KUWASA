@@ -273,9 +273,11 @@ L.control.layers(baseLayers).addTo(map);
 // Add the default layer to the map initially
 defaultLayer.addTo(map);
 
-// Event listener for the new button to show the customer list
-    document.querySelector("#show-customer-list-btn").addEventListener("click", showCustomerList);
-
+// Modify the event listener for the "Show Nearby Customers" button
+document.querySelector("#show-customer-list-btn").addEventListener("click", function () {
+    var showAll = document.querySelector("#show-all-checkbox").checked;
+    showCustomersOnMap(showAll);
+});
 
 // Add an event listener for the toggle button
 document.querySelector("#toggle-layer-btn").addEventListener("click", function () {
@@ -294,6 +296,59 @@ document.querySelector("#toggle-layer-btn").addEventListener("click", function (
     showCustomersAround(map.getCenter(), document.querySelector("#toggle-names-btn").checked);
 });
 
+// Modify the showCustomersOnMap function definition to include the showAll parameter
+function showCustomersOnMap(showAll) {
+    if (currentLocation) {
+        var customersToDisplay = showAll ? customers : getNearbyCustomers(currentLocation, 20);
+
+        // Clear existing markers
+        markers.forEach(function (marker) {
+            map.removeLayer(marker);
+        });
+
+        markers = []; // Clear the markers array
+
+        // Set the current tile layer based on user selection
+        var currentLayer = showSatellite ? satelliteLayer : defaultLayer;
+        map.addLayer(currentLayer);
+
+        // Add markers for customers to display
+        for (var i = 0; i < customersToDisplay.length; i++) {
+            var customer = customersToDisplay[i];
+            var customerMarker = L.marker([customer.latitude, customer.longitude], {
+                icon: L.divIcon({
+                    className: 'custom-customer-marker',
+                    html: '<div class="leaflet-div-icon"></div>',
+                    iconSize: [10, 10], // Adjusted size to make it smaller
+                    iconAnchor: [5, 5], // Adjusted anchor
+                }),
+            })
+                .bindPopup(getCustomerPopupContent(customer))
+                .on('click', function (e) {
+                    var clickedMarker = e.target;
+                    var clickedCoords = clickedMarker.getLatLng();
+                    selectedCustomerInfo.value = `Latitude: ${clickedCoords.lat.toFixed(6)}, Longitude: ${clickedCoords.lng.toFixed(6)}`;
+                });
+
+            // Use tooltip instead of popup if showNames is true
+            if (showNames) {
+                customerMarker.bindTooltip(customer.customername, {
+                    permanent: true,
+                    direction: 'auto',
+                    className: 'leaflet-tooltip-custom'
+                });
+            }
+
+            markers.push(customerMarker);
+            customerMarker.addTo(map);
+        }
+
+        // Show current location in the textbox
+        currentLocationInfo.value = `Latitude: ${currentLocation.lat.toFixed(6)}, Longitude: ${currentLocation.lng.toFixed(6)}`;
+    } else {
+        alert('Please get your current location before showing customers on the map.');
+    }
+}
 // Function to show the list of customers
     function showCustomerList() {
         if (currentLocation) {
