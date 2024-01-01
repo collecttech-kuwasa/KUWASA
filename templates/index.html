@@ -273,12 +273,8 @@ L.control.layers(baseLayers).addTo(map);
 // Add the default layer to the map initially
 defaultLayer.addTo(map);
 
-// Modify the event listener for the "Show Nearby Customers" button
-document.querySelector("#show-customer-list-btn").addEventListener("click", function () {
-    // Assuming you want to show nearby customers without checking any checkbox
-    var showAll = false;
-    showCustomersOnMap(showAll);
-});
+// Event listener for the new button to show the customer list
+    document.querySelector("#show-customer-list-btn").addEventListener("click", showCustomerList);
 
 
 // Add an event listener for the toggle button
@@ -352,33 +348,33 @@ function showCustomersOnMap(showAll) {
     }
 }
 // Function to show the list of customers
-    function showCustomerList() {
-        if (currentLocation) {
-            var nearbyCustomers = getNearbyCustomers(currentLocation, 20); // Get the nearest 20 customers
-            var customerListContainer = document.getElementById('customer-list');
-            customerListContainer.innerHTML = ''; // Clear existing list
+function showCustomerList() {
+    if (currentLocation) {
+        var nearbyCustomers = getNearbyCustomers(currentLocation, 20); // Get the nearest 20 customers
+        var customerListContainer = document.getElementById('customer-list');
+        customerListContainer.innerHTML = ''; // Clear existing list
 
-            // Populate the list with customer information including house number and distance
-nearbyCustomers.forEach(function (customer) {
-    var listItem = document.createElement('li');
-    var distance = calculateDistance(
-        currentLocation.lat, currentLocation.lng,
-        customer.latitude, customer.longitude
-    );
+        // Populate the list with customer information including house number and distance
+        nearbyCustomers.forEach(function (customer) {
+            var listItem = document.createElement('li');
+            var distance = calculateDistance(
+                currentLocation.lat, currentLocation.lng,
+                customer.latitude, customer.longitude
+            );
 
-    // Check if distance is undefined and handle it
-    var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
+            // Check if distance is undefined and handle it
+            var distanceText = distance !== undefined ? `${distance.toFixed(2)}m` : 'N/A';
 
-    listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'N/A'}, Street: ${customer.street_name || 'N/A'}, ${distance.toFixed(2)}m)`;
+            listItem.innerHTML = `<strong>${customer.customername}</strong> - (HN: ${customer.house_number || 'N/A'}, Street: ${customer.street_name || 'N/A'}, ${distance.toFixed(2)}m)`;
 
-        document.getElementById('customer-list').appendChild(listItem);
-});
+            document.getElementById('customer-list').appendChild(listItem);
+        });
 
-            // Scroll to the customer list container
-            document.getElementById('customer-list-container').scrollIntoView({ behavior: 'smooth' });
-        } else {
-            alert('Please get your current location before showing the customer list.');
-        }
+        // Scroll to the customer list container
+        document.getElementById('customer-list-container').scrollIntoView({ behavior: 'smooth' });
+    } else {
+        alert('Please get your current location before showing the customer list.');
+    }
 }
  // Modify the function definition to include house number and distance
 function getNearbyCustomers(currentLocation, limit) {
